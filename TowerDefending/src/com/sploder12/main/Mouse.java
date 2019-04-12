@@ -9,7 +9,13 @@ public class Mouse extends MouseAdapter{
 	
 	public void mousePressed(MouseEvent e)
 	{
-		
+		mx = e.getX();
+		my = e.getY();
+
+
+		if(Main.state == "MapMakeUI"){
+			MapMaker.place(mx, my);
+		}
 	
 	}
 	

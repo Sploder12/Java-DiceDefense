@@ -1,19 +1,21 @@
 package com.sploder12.main;
 
 import java.awt.Canvas;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class Main extends Canvas implements Runnable{
 
 	private static final long serialVersionUID = 6449263401446869271L;
-	private Mouse mouse;
+
 	private Thread thread;
 	public boolean running = false;
-	public static String state = "start";
+	public static String state = "MapMakeUI";
 	
 	public Main(){
-		mouse = new Mouse();
-		this.addMouseListener(mouse);
 		start();
 	}
 	
@@ -41,15 +43,20 @@ public class Main extends Canvas implements Runnable{
 		stop();
 	}
 	
+
+	
 	
 	public boolean game(){
-		
-		
+		while(state != "end"){
+			//System.out.println("running");
+		 
+		}
 		return false;
 	}
 	
 	
 	public static void main(String[]args){
+		//new MapMaker("test");
 		new Main();
 		new Render();
 	}
