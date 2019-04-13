@@ -26,7 +26,7 @@ public class MapMakeUI {
 			Main.state = "Save";
 		} else if(Mouse.moveOver(Mouse.mx,Mouse.my,525,780,200,75)){
 			//Main.state = "Load";
-			MapMaker.load("Grass_Fields");
+			MapMaker.load("test");
 		}
 	}
 }

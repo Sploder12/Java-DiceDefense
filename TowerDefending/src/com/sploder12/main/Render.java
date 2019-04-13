@@ -31,6 +31,7 @@ public class Render extends Canvas implements Runnable{
 	public static final int WIDTH = 1000, HEIGHT = 900; //Play Area is 768x768
 	private Thread render;
 	private Mouse mouse;
+	private Keyboard keyboard;
 	public boolean rendering = false;
 	public static Graphics g;
 	public static Font newFont;
@@ -40,6 +41,8 @@ public class Render extends Canvas implements Runnable{
 	public Render(){
 		mouse = new Mouse();
 		this.addMouseListener(mouse);
+		keyboard = new Keyboard();
+		this.addKeyListener(keyboard);
 		new MapMaker("template");
 		try{
 		tileset = ImageIO.read(new File("resources\\tileset.png"));
@@ -121,7 +124,7 @@ public class Render extends Canvas implements Runnable{
 			  Class<?> cls = Class.forName(rendstate);
 			  cls.newInstance();
 		  } catch(Exception e){
-			  
+			  System.out.println(e);
 		  }
 		  if(Main.state == "MapMakeUI"){
 			  for(int i=0;i<24;i++)
