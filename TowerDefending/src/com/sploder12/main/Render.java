@@ -6,13 +6,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.Toolkit;
+//import java.awt.Toolkit;
 
 
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+//import java.io.FileInputStream;
+//import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 

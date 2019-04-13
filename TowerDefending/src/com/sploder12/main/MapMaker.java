@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
+//import java.io.IOException;
 import java.io.InputStream;
 
 import com.sploder12.main.screens.Tiles;
@@ -53,8 +53,8 @@ public class MapMaker{
         	map = map + ".wd";
         	InputStream mapfile = new FileInputStream("maps/"+map);
         	
-        	for(int y = 0; y <24; y++){
-        		for(int x = 0; x <24; x++){
+        	for(byte y = 0; y <24; y++){
+        		for(byte x = 0; x <24; x++){
         			int z = mapfile.read(); 	//This is going to be fun (see Tiles.java for ASCii data)
         			//System.out.println(z);
         			//byte b = 127;
@@ -77,12 +77,11 @@ public class MapMaker{
     }
 
 
-    public static boolean saveas(){
+    public static boolean saveas(String name){
         try
         {
-        	String newmapname = "test";
         	BufferedWriter output = null;
-	        File file = new File("Maps\\"+ newmapname +".wd");
+	        File file = new File("Maps\\"+ name +".wd");
 	        output = new BufferedWriter(new FileWriter(file));
 	        for(byte y = 0; y < 24; y++){
 	        	for(byte x = 0; x < 24; x++){
