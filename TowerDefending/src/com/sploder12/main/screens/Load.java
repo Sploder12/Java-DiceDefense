@@ -4,19 +4,23 @@ import java.awt.Color;
 
 import com.sploder12.main.*;
 
-public class Save {
-	public static String name = "unnamed";
-	public Save(){
+
+public class Load {
+	public static String name = "";
+	
+	public Load(){
 		Rend();
 		mouse();
 	}
 	
+	
 	public void Rend(){
+		System.out.println();
 		Render.g.setColor(Color.white);
 		Render.g.drawRect(350, 275, 300, 200);
 		Render.newFont = Render.currentFont.deriveFont(Render.currentFont.getSize() * 4.0F); 
 		Render.g.setFont(Render.newFont);
-		Render.g.drawString("Save", 435, 400);
+		Render.g.drawString("Load", 435, 400);
 		Render.newFont = Render.currentFont.deriveFont(Render.currentFont.getSize() * 2.0F); 
 		Render.g.setFont(Render.newFont);
 		Render.g.drawRect(350,150, 300, 50);
@@ -26,19 +30,14 @@ public class Save {
 	
 	public void mouse(){
 		if(Mouse.moveOver(Mouse.mx,Mouse.my,350,275,300,200)){
-			MapMaker.saveas(name);
-			Keyboard.curinpt[0] = false;
+			MapMaker.load(name);
+			Keyboard.curinpt[1] = false;
 			Main.state = "MapMakeUI";
 		} else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
-			if(name == "unnamed"){
-				name = "";
-			}
-			Keyboard.curinpt[0] = true;
+			Keyboard.curinpt[1] = true;
 		} else{
-			Keyboard.curinpt[0] = false;
+			Keyboard.curinpt[1] = false;
 		}
 		
 	}
-	
 }
-

@@ -41,11 +41,11 @@ public class Render extends Canvas implements Runnable{
 	public Render(){
 		mouse = new Mouse();
 		this.addMouseListener(mouse);
-		keyboard = new Keyboard();
+		keyboard = new Keyboard();	//starting mouse and keyboard listeners
 		this.addKeyListener(keyboard);
 		new MapMaker("template");
 		try{
-		tileset = ImageIO.read(new File("resources\\tileset.png"));
+		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tileset
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -76,7 +76,7 @@ public class Render extends Canvas implements Runnable{
 		long timer = System.currentTimeMillis();
 		int frames = 0;
 		while(rendering){
-			long now = System.nanoTime();
+			long now = System.nanoTime();		//loops the rendering
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while(delta >= 1){
@@ -97,7 +97,7 @@ public class Render extends Canvas implements Runnable{
 	
 	protected void drawTile(Graphics g, Tiles t, int x, int y){
         int mx = t.ordinal()%20;
-        int my = t.ordinal()/20;
+        int my = t.ordinal()/20;	//draws the tiles in the location
         g.drawImage(tileset, x, y, x+tW, y+tH,
                 mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
     }
@@ -117,11 +117,10 @@ public class Render extends Canvas implements Runnable{
 		  g.setColor(Color.black);
 		  g.fillRect(0, 0, WIDTH, HEIGHT);
 		  
-		  
 		  try{
 			  String rendstate = "com.sploder12.main.screens." +Main.state;
 			  //System.out.println(rendstate);
-			  Class<?> cls = Class.forName(rendstate);
+			  Class<?> cls = Class.forName(rendstate);	//gets the screen to render from com.sploder.main.screens
 			  cls.newInstance();
 		  } catch(Exception e){
 			  System.out.println(e);
@@ -129,9 +128,8 @@ public class Render extends Canvas implements Runnable{
 		  if(Main.state == "MapMakeUI"){
 			  for(int i=0;i<24;i++)
 				  for(int j=0;j < 24;j++)
-					  drawTile(g, MapMaker.file_map[j][i], i*tW,j*tH);
+					  drawTile(g, MapMaker.file_map[j][i], i*tW,j*tH); //draws the tiles
 		  }
-		  
 		  
 		  g.dispose();
 	    	bs.show();

@@ -25,8 +25,8 @@ public class MapMakeUI {
 		if(Mouse.moveOver(Mouse.mx,Mouse.my,25,780,200,75)){
 			Main.state = "Save";
 		} else if(Mouse.moveOver(Mouse.mx,Mouse.my,525,780,200,75)){
-			//Main.state = "Load";
-			MapMaker.load("test");
+			Main.state = "Load";
+			//MapMaker.load("test");
 		}
 	}
 }

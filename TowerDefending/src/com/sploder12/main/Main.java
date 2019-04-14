@@ -6,7 +6,6 @@ import java.awt.Canvas;
 //import java.io.InputStream;
 //import java.io.InputStreamReader;
 
-
 public class Main extends Canvas implements Runnable{
 
 	private static final long serialVersionUID = 6449263401446869271L;
@@ -23,7 +22,6 @@ public class Main extends Canvas implements Runnable{
 		thread = new Thread(this);
 		thread.start();
 		running = true;
-		
 	}
 	
 	public synchronized void stop(){
@@ -34,26 +32,13 @@ public class Main extends Canvas implements Runnable{
 			e.printStackTrace();
 		}
 	}
-	
 
 	public void run(){
-		while(running){
-			game();
+		while(running && state != "end"){
+			
 		}
 		stop();
 	}
-	
-
-	
-	
-	public boolean game(){
-		while(state != "end"){
-			//System.out.println("running");
-		 
-		}
-		return false;
-	}
-	
 	
 	public static void main(String[]args){
 		//new MapMaker("test");

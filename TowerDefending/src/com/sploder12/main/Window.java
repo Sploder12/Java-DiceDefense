@@ -5,10 +5,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 public class Window {
-public Window(int width, int height, String title, Render render){
-		
+public Window(int width, int height, String title, Render render){	
 		JFrame frame = new JFrame(title);
-		
 		frame.setPreferredSize(new Dimension(width, height));        //Makes The Screen
 		frame.setMaximumSize(new Dimension(width, height));
 		frame.setMinimumSize(new Dimension(width, height));
