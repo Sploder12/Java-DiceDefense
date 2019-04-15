@@ -15,7 +15,7 @@ public class Load {
 	
 	
 	public void Rend(){
-		System.out.println();
+		//System.out.println();
 		Render.g.setColor(Color.white);
 		Render.g.drawRect(350, 275, 300, 200);
 		Render.newFont = Render.currentFont.deriveFont(Render.currentFont.getSize() * 4.0F); 
@@ -26,14 +26,19 @@ public class Load {
 		Render.g.drawRect(350,150, 300, 50);
 		Render.g.drawString(name, 375, 175);
 		Render.g.drawString("File Name", 400, 130);
+		Render.g.drawRect(50, 50, 150, 100);
+		Render.g.drawString("Back", 85, 100);
 	}
 	
 	public void mouse(){
 		if(Mouse.moveOver(Mouse.mx,Mouse.my,350,275,300,200)){
+			Render.renderinggo = true;
 			MapMaker.load(name);
 			Keyboard.curinpt[1] = false;
 			Main.state = "MapMakeUI";
-		} else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 50, 50, 150, 100)){
+			Main.state = "MapMakeUI";
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
 			Keyboard.curinpt[1] = true;
 		} else{
 			Keyboard.curinpt[1] = false;

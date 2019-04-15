@@ -22,14 +22,20 @@ public class Save {
 		Render.g.drawRect(350,150, 300, 50);
 		Render.g.drawString(name, 375, 175);
 		Render.g.drawString("File Name", 400, 130);
+		Render.g.drawRect(50, 50, 150, 100);
+		Render.g.drawString("Back", 85, 100);
 	}
 	
 	public void mouse(){
 		if(Mouse.moveOver(Mouse.mx,Mouse.my,350,275,300,200)){
+			Render.renderinggo = true;
 			MapMaker.saveas(name);
 			Keyboard.curinpt[0] = false;
 			Main.state = "MapMakeUI";
-		} else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
+		} else if(Mouse.moveOver(Mouse.mx, Mouse.my, 50, 50, 150, 100)){
+			Main.state = "MapMakeUI";
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
+			Render.renderinggo = true;
 			if(name == "unnamed"){
 				name = "";
 			}

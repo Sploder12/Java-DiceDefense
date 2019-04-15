@@ -14,7 +14,15 @@ import java.io.File;
 //import java.io.FileInputStream;
 //import java.io.InputStream;
 
+
+
+
+
 import javax.imageio.ImageIO;
+
+
+
+
 
 
 
@@ -37,6 +45,8 @@ public class Render extends Canvas implements Runnable{
 	public static Font newFont;
 	public static Font currentFont;
 	private Image tileset;
+	public static boolean renderinggo;
+	private byte fpslimit = 60;
 	
 	public Render(){
 		mouse = new Mouse();
@@ -106,7 +116,7 @@ public class Render extends Canvas implements Runnable{
 	private void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
-			this.createBufferStrategy(3);          //Makes the FPS not 31mil
+			this.createBufferStrategy(3);          //Makes the FPS not 31mil also prevents flashing
 			return;
 		}
 		 g = bs.getDrawGraphics();
@@ -133,6 +143,12 @@ public class Render extends Canvas implements Runnable{
 		  
 		  g.dispose();
 	    	bs.show();
+	    try {
+			Thread.sleep(1000/(fpslimit+(fpslimit/6)));			//frame limiter
+		} catch (InterruptedException e) {	
+			e.printStackTrace();
+		}
+
 	}
 	
 	

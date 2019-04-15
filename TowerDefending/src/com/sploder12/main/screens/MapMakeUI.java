@@ -24,8 +24,10 @@ public class MapMakeUI {
 	public void mouse(){
 		if(Mouse.moveOver(Mouse.mx,Mouse.my,25,780,200,75)){
 			Main.state = "Save";
+			Render.renderinggo = true;
 		} else if(Mouse.moveOver(Mouse.mx,Mouse.my,525,780,200,75)){
 			Main.state = "Load";
+			Render.renderinggo = true;
 			//MapMaker.load("test");
 		}
 	}
