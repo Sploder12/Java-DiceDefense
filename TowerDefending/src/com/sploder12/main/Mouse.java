@@ -12,11 +12,9 @@ public class Mouse extends MouseAdapter{
 		mx = e.getX();
 		my = e.getY();
 
-
-		if(Main.state == "MapMakeUI"){
+		if(Render.state == "MapMakeUI"){
 			MapMaker.place(mx, my);
 		}
-	
 	}
 	
 	public void mouseReleased(MouseEvent e)
@@ -29,5 +27,4 @@ public class Mouse extends MouseAdapter{
 			return(my > y && my < y + height);
 		} else return false;
 	}
-	
 }

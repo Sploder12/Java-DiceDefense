@@ -4,11 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-//import java.io.IOException;
 import java.io.InputStream;
 
 import com.sploder12.main.screens.Tiles;
-
 
 public class MapMaker{
    
@@ -43,12 +41,6 @@ public class MapMaker{
         	for(byte y = 0; y <24; y++){
         		for(byte x = 0; x <24; x++){
         			int z = mapfile.read(); 	//This is going to be fun (see Tiles.java for ASCii data)
-        			//System.out.println(z);
-        			//byte b = 127;
-        			//char t = '?';
-        			//System.out.println((char)b);
-        			//System.out.println((byte)t);
-        			//System.out.println(Tiles.values()[z-65]);
         			file_map[y][x] = Tiles.values()[z-32];
         		}	
         	}
@@ -83,8 +75,5 @@ public class MapMaker{
             return false;
         }
     }
-
-
-
 
 }

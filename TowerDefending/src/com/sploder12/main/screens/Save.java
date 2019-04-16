@@ -28,14 +28,12 @@ public class Save {
 	
 	public void mouse(){
 		if(Mouse.moveOver(Mouse.mx,Mouse.my,350,275,300,200)){
-			Render.renderinggo = true;
 			MapMaker.saveas(name);
 			Keyboard.curinpt[0] = false;
-			Main.state = "MapMakeUI";
+			Render.state = "MapMakeUI";
 		} else if(Mouse.moveOver(Mouse.mx, Mouse.my, 50, 50, 150, 100)){
-			Main.state = "MapMakeUI";
+			Render.state = "MapMakeUI";
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
-			Render.renderinggo = true;
 			if(name == "unnamed"){
 				name = "";
 			}

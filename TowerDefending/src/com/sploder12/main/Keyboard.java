@@ -19,7 +19,6 @@ public static boolean[] curinpt = new boolean[2]; //see the screens for their in
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
-		Render.renderinggo = true;
 		char key = e.getKeyChar();
 		if((int)e.getKeyChar()  == 8){
 			if(curinpt[0]){				//8 is backspace

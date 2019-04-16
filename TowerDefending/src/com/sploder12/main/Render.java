@@ -6,28 +6,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.Color;
 import java.awt.Image;
-//import java.awt.Toolkit;
-
-
-
 import java.io.File;
-//import java.io.FileInputStream;
-//import java.io.InputStream;
-
-
-
-
-
 import javax.imageio.ImageIO;
-
-
-
-
-
-
-
-
-
 
 import com.sploder12.main.screens.*;
 
@@ -45,8 +25,8 @@ public class Render extends Canvas implements Runnable{
 	public static Font newFont;
 	public static Font currentFont;
 	private Image tileset;
-	public static boolean renderinggo;
 	private byte fpslimit = 60;
+	public static String state = "MapMakeUI";
 	
 	public Render(){
 		mouse = new Mouse();
@@ -112,7 +92,6 @@ public class Render extends Canvas implements Runnable{
                 mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
     }
 	
-	
 	private void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
@@ -120,27 +99,23 @@ public class Render extends Canvas implements Runnable{
 			return;
 		}
 		 g = bs.getDrawGraphics();
-
 		 currentFont = g.getFont();
 		   newFont = currentFont.deriveFont(currentFont.getSize() * 1.8F); 
 		  g.setFont(newFont);
 		  g.setColor(Color.black);
 		  g.fillRect(0, 0, WIDTH, HEIGHT);
-		  
 		  try{
-			  String rendstate = "com.sploder12.main.screens." +Main.state;
-			  //System.out.println(rendstate);
+			  String rendstate = "com.sploder12.main.screens." +state;
 			  Class<?> cls = Class.forName(rendstate);	//gets the screen to render from com.sploder.main.screens
 			  cls.newInstance();
 		  } catch(Exception e){
 			  System.out.println(e);
 		  }
-		  if(Main.state == "MapMakeUI"){
+		  if(state == "MapMakeUI"){
 			  for(int i=0;i<24;i++)
 				  for(int j=0;j < 24;j++)
 					  drawTile(g, MapMaker.file_map[j][i], i*tW,j*tH); //draws the tiles
 		  }
-		  
 		  g.dispose();
 	    	bs.show();
 	    try {
@@ -148,8 +123,5 @@ public class Render extends Canvas implements Runnable{
 		} catch (InterruptedException e) {	
 			e.printStackTrace();
 		}
-
 	}
-	
-	
 }
