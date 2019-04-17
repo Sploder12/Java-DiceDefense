@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
+
 import javax.imageio.ImageIO;
 
 import com.sploder12.main.screens.*;
@@ -124,4 +125,7 @@ public class Render extends Canvas implements Runnable{
 			e.printStackTrace();
 		}
 	}
+		public static void main(String[] args) {
+			new Render();
+		}
 }
