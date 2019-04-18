@@ -25,9 +25,9 @@ public class Render extends Canvas implements Runnable{
 	public static Graphics g;
 	public static Font newFont;
 	public static Font currentFont;
-	private Image tileset;
+	public static Image tileset;
 	private byte fpslimit = 60;
-	public static String state = "MapMakeUI";
+	public static String state = "Menu";
 	
 	public Render(){
 		mouse = new Mouse();

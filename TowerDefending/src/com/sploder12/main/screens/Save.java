@@ -40,9 +40,7 @@ public class Save {
 			Keyboard.curinpt[0] = true;
 		} else{
 			Keyboard.curinpt[0] = false;
-		}
-		
+		}	
 	}
-	
 }
 
