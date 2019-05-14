@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.sploder12.main.Mouse;
 import com.sploder12.main.Render;
+import com.sploder12.main.WaveMaker;
 
 public class Menu {
  public Menu(){
@@ -26,6 +27,7 @@ public class Menu {
 		 Render.state = "MapMakeUI";
 	 } else if(Mouse.moveOver(Mouse.mx, Mouse.my, 240, 400, 500, 250)){
 		 Render.state = "WaveMake";
+		 new WaveMaker();
 	 }
  }
 }

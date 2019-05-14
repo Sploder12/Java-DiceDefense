@@ -26,7 +26,8 @@ public class Render extends Canvas implements Runnable{
 	public static Font newFont;
 	public static Font currentFont;
 	public static Image tileset;
-	private byte fpslimit = 60;
+	public static Image paths;
+	private byte fpslimit = 62;
 	public static String state = "Menu";
 	
 	public Render(){
@@ -34,9 +35,10 @@ public class Render extends Canvas implements Runnable{
 		this.addMouseListener(mouse);
 		keyboard = new Keyboard();	//starting mouse and keyboard listeners
 		this.addKeyListener(keyboard);
-		new MapMaker("template");
+		
 		try{
 		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tileset
+		paths = ImageIO.read(new File("resources\\paths.png"));
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -76,9 +78,16 @@ public class Render extends Canvas implements Runnable{
 			if(rendering)
 				render();
 			frames++;
+			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
 				System.out.println("(Graphic)FPS: " + frames);  
+				//System.out.println(fpslimit);
+				if(frames > 62){
+					fpslimit -= 2;
+				}else if(frames < 58){ //framerate stablizer
+					fpslimit += 2;
+				}
 				tempframes = frames;
 				frames = 0;
 			}
@@ -94,6 +103,12 @@ public class Render extends Canvas implements Runnable{
         mx = z.ordinal()%20;
         my = z.ordinal()/20;
         g.drawImage(tileset, 865, 215, 865+tW, 215+tH,mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
+    }
+	
+	protected void drawPath(Graphics g, Paths t, int x, int y){
+        int mx = t.ordinal()%20;
+        int my = t.ordinal()/20;	//draws the tiles in the location
+        g.drawImage(paths, x, y, x+tW, y+tH,mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
     }
 
 	private void render(){
@@ -116,14 +131,17 @@ public class Render extends Canvas implements Runnable{
 			  System.out.println(e);
 		  }
 		  if(state == "MapMakeUI"){
-			  for(int i=0;i<24;i++)
-				  for(int j=0;j < 24;j++)
+			  for(int i=0;i<24;i++){
+				  for(int j=0;j < 24;j++){
 					  drawTile(g, MapMaker.file_map[j][i], i*tW,j*tH); //draws the tiles
+			  		  drawPath(g, MapMaker.file_mappath[j][i], i*tW,j*tH);
+				  }
+			  }
 		  }
 		  g.dispose();
 	    	bs.show();
 	    try {
-			Thread.sleep(1000/(fpslimit+(fpslimit/6)));			//frame limiter
+			Thread.sleep(1000/(fpslimit));			//frame limiter
 		} catch (InterruptedException e) {	
 			e.printStackTrace();
 		}
