@@ -1,6 +1,5 @@
 package com.sploder12.main.screens;
 import java.awt.Color;
-import java.util.Arrays;
 
 import com.sploder12.main.Mouse;
 import com.sploder12.main.Render;

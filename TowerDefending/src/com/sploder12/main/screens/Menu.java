@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import com.sploder12.main.Mouse;
 import com.sploder12.main.Render;
-import com.sploder12.main.WaveMaker;
 
 public class Menu {
  public Menu(){
@@ -20,6 +19,10 @@ public class Menu {
 	 Render.g.drawString("Map Maker", 340, 250);
 	 Render.g.drawRect(240, 400, 500, 250);
 	 Render.g.drawString("Wave Maker", 325, 550);
+	 Render.g.drawRect(930, 800, 50, 50);
+	 Render.newFont = Render.currentFont.deriveFont(Render.currentFont.getSize() * 1.0F); 
+	 Render.g.setFont(Render.newFont);
+	 Render.g.drawString("Options", 933, 830);
  }
  
  private void mouse(){
@@ -27,7 +30,14 @@ public class Menu {
 		 Render.state = "MapMakeUI";
 	 } else if(Mouse.moveOver(Mouse.mx, Mouse.my, 240, 400, 500, 250)){
 		 Render.state = "WaveMake";
-		 new WaveMaker();
+		 //new WaveMaker();
+	 }else if(Mouse.moveOver(Mouse.mx, Mouse.my, 930, 800, 50, 50) && Mouse.clicked){
+		 Render.state = "Options";
+		 try {
+				Thread.sleep(120);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 	 }
  }
 }

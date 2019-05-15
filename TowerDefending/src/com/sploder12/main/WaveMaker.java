@@ -4,9 +4,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import com.sploder12.main.screens.Paths;
-import com.sploder12.main.screens.Tiles;
-
 import sploder12.json.JSON;
 
 

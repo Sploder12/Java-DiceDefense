@@ -16,11 +16,15 @@ public class Mouse extends MouseAdapter{
 		if(Render.state == "MapMakeUI"){
 			MapMaker.place(mx, my);
 		}
+		
 	}
 	
 	public void mouseReleased(MouseEvent e)
 	{
+		
 		clicked = false;
+		mx = 5000000;
+		my = mx;
 	}
 	
 	public static boolean moveOver(int mx, int my,int x, int y, int width, int height){

@@ -27,7 +27,8 @@ public class Render extends Canvas implements Runnable{
 	public static Font currentFont;
 	public static Image tileset;
 	public static Image paths;
-	private byte fpslimit = 62;
+	public static byte fpslimit = 62;
+	public static byte wantedfps = 60;
 	public static String state = "Menu";
 	
 	public Render(){
@@ -60,7 +61,7 @@ public class Render extends Canvas implements Runnable{
 		}
 	}
 	
-	int tempframes;
+	public static int tempframes;
 	public void run(){
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60.0;
@@ -83,9 +84,9 @@ public class Render extends Canvas implements Runnable{
 				timer += 1000;
 				System.out.println("(Graphic)FPS: " + frames);  
 				//System.out.println(fpslimit);
-				if(frames > 62){
+				if(frames > wantedfps+2 && fpslimit > 2){
 					fpslimit -= 2;
-				}else if(frames < 58){ //framerate stablizer
+				}else if(frames < wantedfps-2 && fpslimit < 254){ //framerate stablizer
 					fpslimit += 2;
 				}
 				tempframes = frames;
@@ -141,7 +142,11 @@ public class Render extends Canvas implements Runnable{
 		  g.dispose();
 	    	bs.show();
 	    try {
-			Thread.sleep(1000/(fpslimit));			//frame limiter
+	    	if(fpslimit > 0 && fpslimit < 1000){
+	    		Thread.sleep(1000/(fpslimit));			//frame limiter
+	    	}else{
+	    		Thread.sleep(17);
+	    	}
 		} catch (InterruptedException e) {	
 			e.printStackTrace();
 		}
