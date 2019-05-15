@@ -15,14 +15,14 @@ public class WaveMaker {
 	public static String file;
 	public static byte currentwave;
 	public static byte wavepart = 1;
-	public static short selectedenemy = 0; //by deafult index of D6
-	public static final short[] enemies= {10,5,1};
+	public static short selectedenemy = 0; //by deafult index of D4 then D6...
+	public static final short[] enemies= {521,10,586,457};
 	public WaveMaker(){
 		JSON json = new JSON();
 		file = json.convertToString("Enemies.json");
 		String[] enemies = {"D6","D8","D4","D10"};
 		int[][] test =json.findAllIndexOfStrings(file, enemies);
-		//System.out.println(Arrays.toString(test));
+		System.out.println(Arrays.toString(test));
 	}
 	
 	public void saveas(String name){

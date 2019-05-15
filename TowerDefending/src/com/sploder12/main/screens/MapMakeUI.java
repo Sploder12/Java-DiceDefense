@@ -35,6 +35,9 @@ public class MapMakeUI {
 		Render.g.drawRect(858, 600, 50, 50);
 		Render.g.drawString("Remove",840,590);
 		Render.g.drawRect(858, 400, 50, 50);
+		
+		Render.g.drawString("Main Menu",820,820);
+		Render.g.drawRect(775, 780, 200, 75);
 		Render.g.drawString("Place Enemy Paths", 790, 390);
 		if(MapMaker.placingpaths){
 			Render.g.fillRect(858, 400, 50, 50);
@@ -87,6 +90,8 @@ public class MapMakeUI {
 			if(MapMaker.selectedTile < 0){
 				MapMaker.selectedTile = 96;
 			}
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 775, 780, 200, 75)){
+			Render.state = "Menu";
 		}
 	}
 }

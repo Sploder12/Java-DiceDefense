@@ -34,6 +34,8 @@ public class WaveMake {
 		Render.g.drawRect(640,300,50,50);
 		Render.g.drawString("-->",650,335);
 		Render.g.drawString("<--",60,335);
+		Render.g.drawString("Main Menu",820,820);
+		Render.g.drawRect(775, 780, 200, 75);
 	
 	}
 	
@@ -80,6 +82,8 @@ public class WaveMake {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 775, 780, 200, 75)){
+			Render.state = "Menu";
 		}
 	}
 }
