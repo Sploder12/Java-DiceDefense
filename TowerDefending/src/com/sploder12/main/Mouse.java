@@ -4,8 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Mouse extends MouseAdapter{
-	public static int my;
-	public static int mx;
+	public static int my, mx;
 	public static boolean clicked;
 	
 	public void mousePressed(MouseEvent e)

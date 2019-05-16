@@ -14,8 +14,7 @@ import com.sploder12.main.screens.*;
 
 public class Render extends Canvas implements Runnable{
 	
-	public static final int tW = 32; // tile width
-    public static final int tH = 32; // tile height
+	public static final int tW = 32,tH = 32; // tile width & tile height
 	private static final long serialVersionUID = -5376655677283171262L;
 	public static final int WIDTH = 1000, HEIGHT = 900; //Play Area is 768x768
 	public static Thread render;
@@ -23,12 +22,9 @@ public class Render extends Canvas implements Runnable{
 	private Keyboard keyboard;
 	public boolean rendering = false;
 	public static Graphics g;
-	public static Font newFont;
-	public static Font currentFont;
-	public static Image tileset;
-	public static Image paths;
-	public static byte fpslimit = 62;
-	public static byte wantedfps = 60;
+	public static Font newFont, currentFont;
+	public static Image tileset, paths, enemies;
+	public static byte fpslimit = 47, wantedfps = 45;
 	public static String state = "Menu";
 	
 	public Render(){
@@ -38,8 +34,9 @@ public class Render extends Canvas implements Runnable{
 		this.addKeyListener(keyboard);
 		
 		try{
-		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tileset
+		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tilesets
 		paths = ImageIO.read(new File("resources\\paths.png"));
+		enemies = ImageIO.read(new File("resources\\enemies.png"));
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -142,7 +139,7 @@ public class Render extends Canvas implements Runnable{
 		  g.dispose();
 	    	bs.show();
 	    try {
-	    	if(fpslimit > 0 && fpslimit < 1000){
+	    	if(fpslimit > 0 && fpslimit < 254){
 	    		Thread.sleep(1000/(fpslimit));			//frame limiter
 	    	}else{
 	    		Thread.sleep(17);
