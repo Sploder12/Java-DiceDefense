@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
@@ -23,11 +24,14 @@ public class Render extends Canvas implements Runnable{
 	public boolean rendering = false;
 	public static Graphics g;
 	public static Font newFont, currentFont;
-	public static Image tileset, paths, enemies;
+	public static Image tileset, paths;
+	public static BufferedImage enemies;
+	public Image thumbnail;
 	public static byte fpslimit = 47, wantedfps = 45;
 	public static String state = "Menu";
 	
 	public Render(){
+		
 		mouse = new Mouse();
 		this.addMouseListener(mouse);
 		keyboard = new Keyboard();	//starting mouse and keyboard listeners
@@ -37,6 +41,8 @@ public class Render extends Canvas implements Runnable{
 		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tilesets
 		paths = ImageIO.read(new File("resources\\paths.png"));
 		enemies = ImageIO.read(new File("resources\\enemies.png"));
+		thumbnail = enemies.getScaledInstance(1280, -1, Image.SCALE_SMOOTH);
+		
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -109,6 +115,11 @@ public class Render extends Canvas implements Runnable{
         g.drawImage(paths, x, y, x+tW, y+tH,mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
     }
 
+	protected void drawEnemy(Graphics g, Enemies t, int x, int y){
+		int mx = t.ordinal()%10;
+		int my = t.ordinal()/10;;
+		g.drawImage(thumbnail, x, y, x+128, y+128,mx*128, my*128,  mx*128+128, my*128+128, this);
+	}
 	private void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
@@ -135,6 +146,11 @@ public class Render extends Canvas implements Runnable{
 			  		  drawPath(g, MapMaker.file_mappath[j][i], i*tW,j*tH);
 				  }
 			  }
+		  }else if(state == "WaveMake"){
+			  for(int i = 0; i < 5; i++){
+				  drawEnemy(g,WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5)+i],i*128+50,150);
+			  }
+			  drawEnemy(g,Enemies.values()[WaveMaker.selectedenemy],815, 215);
 		  }
 		  g.dispose();
 	    	bs.show();
@@ -148,6 +164,8 @@ public class Render extends Canvas implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
+	
 		public static void main(String[] args) {
 			new Render();
 		}

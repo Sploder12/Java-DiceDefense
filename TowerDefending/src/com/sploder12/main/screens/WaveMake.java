@@ -7,6 +7,7 @@ import com.sploder12.main.WaveMaker;
 
 public class WaveMake {
 	public WaveMake(){
+		
 		Rend();
 		mouse();
 	}
@@ -20,8 +21,8 @@ public class WaveMake {
 		Render.g.drawString("Next", 915, 135);
 		Render.g.drawString("Enemy Selection", 800, 90);
 		Render.g.drawString("Current Enemy", 810, 200);
-		Render.g.drawRect(815, 215, 128, 128);
-		Render.g.drawString(""+WaveMaker.enemies[WaveMaker.selectedenemy], 860, 270);
+		//Render.g.drawRect(815, 215, 128, 128);
+		//Render.g.drawString(""+WaveMaker.selectedenemy, 860, 270);
 		
 		Render.g.drawString("Current Wave:"+(WaveMaker.currentwave+1),250,50);
 		for(byte x = 1; x <= 5; x++){
@@ -41,7 +42,7 @@ public class WaveMake {
 	private void mouse(){
 		for(byte x = 1; x <= 5; x++){
 			if(Mouse.moveOver(Mouse.mx, Mouse.my, 128*x-78, 150, 128, 128) && Mouse.clicked){
-				WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5) + x - 1 ] = WaveMaker.enemies[WaveMaker.selectedenemy];
+				WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5) + x - 1 ] = Enemies.values()[WaveMaker.selectedenemy];
 			}
 		}
 		
