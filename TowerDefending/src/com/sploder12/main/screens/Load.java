@@ -14,31 +14,29 @@ public class Load {
 	
 	public void Rend(){
 		Render.g.setColor(Color.white);
-		Render.g.drawRect(350, 275, 300, 200);
-		Render.newFont = Render.currentFont.deriveFont(Render.currentFont.getSize() * 4.0F); 
+		Render.g.drawRect(Math.round(175*Render.xScale), Math.round(138*Render.yScale), Math.round(150*Render.xScale), Math.round(100*Render.yScale));
+		Render.newFont = Render.currentFont.deriveFont(Math.round(Render.currentFont.getSize() * 2.0F)*Render.xScale); 
 		Render.g.setFont(Render.newFont);
-		Render.g.drawString("Load", 435, 400);
-		Render.newFont = Render.currentFont.deriveFont(Render.currentFont.getSize() * 2.0F); 
+		Render.g.drawString("Load", Math.round(218*Render.xScale), Math.round(200*Render.yScale));
+		Render.newFont = Render.currentFont.deriveFont(Math.round(Render.currentFont.getSize() * 1.0F)*Render.xScale); 
 		Render.g.setFont(Render.newFont);
-		Render.g.drawRect(350,150, 300, 50);
-		Render.g.drawString(name, 375, 175);
-		Render.g.drawString("File Name", 400, 130);
-		Render.g.drawRect(50, 50, 150, 100);
-		Render.g.drawString("Back", 85, 100);
+		Render.g.drawRect(Math.round(175*Render.xScale),Math.round(75*Render.yScale), Math.round(150*Render.xScale), Math.round(25*Render.yScale));
+		Render.g.drawString(name, Math.round(188*Render.xScale), Math.round(88*Render.yScale));
+		Render.g.drawString("File Name", Math.round(200*Render.xScale), Math.round(65*Render.yScale));
+		Render.g.drawRect(Math.round(25*Render.xScale), Math.round(25*Render.yScale), Math.round(75*Render.xScale), Math.round(50*Render.yScale));
+		Render.g.drawString("Back", Math.round(43*Render.xScale), Math.round(50*Render.yScale));
 	}
 	
 	public void mouse(){
-		if(Mouse.moveOver(Mouse.mx,Mouse.my,350,275,300,200)){
+		if(Mouse.moveOver(Mouse.mx,Mouse.my,Math.round(175*Render.xScale),Math.round(138*Render.yScale),Math.round(150*Render.xScale),Math.round(100*Render.yScale))){
 			MapMaker.load(name);
 			Keyboard.curinpt[1] = false;
 			Render.state = "MapMakeUI";
-		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 50, 50, 150, 100)){
-			Render.state = "MapMakeUI";
-		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, 350,150, 300, 50)){
-			Keyboard.curinpt[1] = true;
-		} else{
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(25*Render.xScale), Math.round(25*Render.yScale), Math.round(75*Render.xScale), Math.round(50*Render.yScale))){
 			Keyboard.curinpt[1] = false;
+			Render.state = "MapMakeUI";
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(175*Render.xScale),Math.round(75*Render.yScale), Math.round(150*Render.xScale), Math.round(25*Render.yScale))){
+			Keyboard.curinpt[1] = true;	
 		}
-		
 	}
 }

@@ -13,6 +13,11 @@ public class WaveMake {
 	
 	private void Rend(){
 		Render.g.setColor(Color.white);
+		Render.g.drawRect(Math.round(25*Render.xScale), Math.round(390*Render.yScale), Math.round(100*Render.xScale), Math.round(38*Render.yScale));
+		Render.g.drawString("Save As", Math.round(40*Render.xScale), Math.round(413*Render.yScale));
+		
+		Render.g.drawRect(Math.round(263*Render.xScale), Math.round(390*Render.yScale), Math.round(100*Render.xScale), Math.round(38*Render.yScale));
+		Render.g.drawString("Load", Math.round(290*Render.xScale), Math.round(413*Render.yScale));
 		Render.g.drawRect(((int)Math.round(380*Render.xScale)),0,(int)Math.round(500*Render.xScale),(int)Math.round(500*Render.yScale));
 		//Render.g.drawRect(850*Render.xScale, 100*Render.yScale, 50*Render.xScale,50*Render.yScale);
 		Render.g.drawRect((int)Math.round(388*Render.xScale), (int)Math.round(50*Render.yScale), (int)Math.round(50*Render.xScale), (int)Math.round(25*Render.yScale));
@@ -84,6 +89,10 @@ public class WaveMake {
 			}
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, (int)Math.round(400*Render.xScale), (int)Math.round(390*Render.yScale), (int)Math.round(75*Render.xScale), (int)Math.round(38*Render.yScale))){
 			Render.state = "Menu";
+		}else if(Mouse.moveOver(Mouse.mx,Mouse.my,Math.round(13*Render.xScale),Math.round(390*Render.yScale),Math.round(100*Render.xScale),Math.round(38*Render.yScale))){
+			Render.state = "SaveWv";
+		} else if(Mouse.moveOver(Mouse.mx,Mouse.my,Math.round(263*Render.xScale),Math.round(390*Render.yScale),Math.round(100*Render.xScale),Math.round(38*Render.yScale))){
+			Render.state = "LoadWv";
 		}
 	}
 }

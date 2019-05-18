@@ -25,11 +25,11 @@ public class WaveMaker {
 		System.out.println(Arrays.toString(test));
 	}
 	
-	public void saveas(String name){
+	public static void saveas(String name){
 		name = name + ".wv";
 	}
 	
-	public void load(String wave){
+	public static void load(String wave){
 		wave = wave + ".wv";
 		try{
 			boolean reading = true;

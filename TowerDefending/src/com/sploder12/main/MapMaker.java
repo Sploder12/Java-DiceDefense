@@ -36,9 +36,9 @@ public class MapMaker{
     }
     
     public static void place(int mx, int my){
-        int cellx = (int)Math.ceil(mx / 32.0)- 1;
-        int celly = (int)Math.ceil(my / 32.0) - 1; //takes the current mouse postition and converts it to an index
-        if(mx <= 768 && my <= 768){
+        int cellx = (int)Math.ceil(mx / (16.0*Render.xScale))- 1;
+        int celly = (int)Math.ceil(my / (16.0*Render.yScale)) - 1; //takes the current mouse postition and converts it to an index
+        if(mx <= Math.round(384*Render.xScale) && my <= Math.round(384*Render.yScale)){
         	if(!placingpaths){
         		Tiles placing = Tiles.values()[selectedTile];
         		file_map[celly][cellx] = placing;

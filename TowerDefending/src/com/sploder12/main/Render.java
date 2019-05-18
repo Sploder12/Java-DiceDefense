@@ -26,11 +26,11 @@ public class Render extends Canvas implements Runnable{
 	public boolean rendering = false;
 	public static Graphics2D g;
 	public static Font newFont, currentFont;
-	public static Image tileset, paths;
-	public static BufferedImage enemies;
-	public Image thumbnail;
+	public static BufferedImage tileset, paths,enemies;
+	public Image enemiescale,pathscale,tilescale;
 	public static byte fpslimit = 47, wantedfps = 45;
 	public static String state = "Menu";
+	public static String prevstate = "Menu";
 	
 	public Render(){
 		
@@ -43,7 +43,9 @@ public class Render extends Canvas implements Runnable{
 		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tilesets
 		paths = ImageIO.read(new File("resources\\paths.png"));
 		enemies = ImageIO.read(new File("resources\\enemies.png"));
-		thumbnail = enemies.getScaledInstance(Math.round(160*xScale), -1, Image.SCALE_SMOOTH);
+		enemiescale = enemies.getScaledInstance(Math.round(160*xScale), -1, Image.SCALE_SMOOTH);
+		pathscale = paths.getScaledInstance(Math.round(64*xScale), -1, Image.SCALE_SMOOTH);
+		tilescale = tileset.getScaledInstance(Math.round(320*xScale), -1, Image.SCALE_SMOOTH);
 		
 		}catch(Exception e){
 			System.out.println(e);
@@ -81,8 +83,9 @@ public class Render extends Canvas implements Runnable{
 			while(delta >= 1){
 				delta--;                               
 			}
-			if(rendering)
-				render();
+			if(rendering){
+				render();	
+			}
 			frames++;
 			
 			if(System.currentTimeMillis() - timer > 1000){
@@ -104,26 +107,25 @@ public class Render extends Canvas implements Runnable{
 	protected void drawTile(Graphics g, Tiles t, int x, int y){
         int mx = t.ordinal()%20;
         int my = t.ordinal()/20;	//draws the tiles in the location
-        g.drawImage(tileset, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
+        g.drawImage(tilescale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
         Tiles z = Tiles.values()[MapMaker.selectedTile];
         mx = z.ordinal()%20;
         my = z.ordinal()/20;
-        g.drawImage(tileset, (int)Math.round(433*xScale), (int)Math.round(108*xScale), (int)Math.round((433+tW)*xScale), (int)Math.round((108+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
+        g.drawImage(tilescale, (int)Math.round(433*xScale), (int)Math.round(108*xScale), (int)Math.round((433+tW)*xScale), (int)Math.round((108+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
     }
 	
 	protected void drawPath(Graphics g, Paths t, int x, int y){
-        int mx = t.ordinal()%20;
-        int my = t.ordinal()/20;	//draws the tiles in the location
-        g.drawImage(paths, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
+        int mx = t.ordinal()%4;	//draws the tiles in the location
+        int my = t.ordinal()/4;
+        g.drawImage(pathscale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round(((mx*tW)*xScale)), (int)Math.round((my*tH*yScale)),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
     }
 
 	protected void drawEnemy(Graphics g, Enemies t, int x, int y){
 		int mx = t.ordinal()%10;
 		int my = t.ordinal()/10;
-		g.drawImage(thumbnail, (int)Math.round(x*xScale),(int)Math.round(y*yScale), (int)Math.round((x+tW*4)*xScale), (int)Math.round((y+tH*4)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
+		g.drawImage(enemiescale, (int)Math.round(x*xScale),(int)Math.round(y*yScale), (int)Math.round((x+tW*4)*xScale), (int)Math.round((y+tH*4)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
 	}
 	private void render(){
-		
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
 			this.createBufferStrategy(3);          //Makes the FPS not 31mil also prevents flashing
@@ -148,7 +150,7 @@ public class Render extends Canvas implements Runnable{
 			  for(int i=0;i<24;i++){
 				  for(int j=0;j < 24;j++){
 					  drawTile(g, MapMaker.file_map[j][i], (i*tW),(j*tH)); //draws the tiles
-			  		  drawPath(g, MapMaker.file_mappath[j][i], (i*tW),(j*tH)); //@TODO may need to be changed to 1/2
+			  		  drawPath(g, MapMaker.file_mappath[j][i], (i*tW),(j*tH));
 				  }
 			  }
 			  
@@ -158,7 +160,7 @@ public class Render extends Canvas implements Runnable{
 			  }
 			  drawEnemy(g,Enemies.values()[WaveMaker.selectedenemy],408, 108);
 		  }
-		  g.dispose();
+		 g.dispose();
 		  
 	    	bs.show();
 	    	
@@ -177,9 +179,8 @@ public class Render extends Canvas implements Runnable{
 		public static void main(String[] args) {
 			WIDTH = Integer.parseInt(args[0]);
 			HEIGHT = Integer.parseInt(args[1]);
-			xScale = WIDTH/500; //apparently downscaling isn't exist
-			yScale = HEIGHT/450;
-			
+			xScale = WIDTH/500F; 
+			yScale = HEIGHT/450F;
 			new Render();
 		}
 }

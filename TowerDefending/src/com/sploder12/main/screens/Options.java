@@ -13,23 +13,23 @@ public class Options {
 	
 	public void Rend(){
 		Render.g.setColor(Color.white);
-		Render.g.drawString("Main Menu",820,820);
-		Render.g.drawRect(775, 780, 200, 75);
-		Render.g.drawString("FPS: "+Render.tempframes,50,50);
-		Render.g.drawString("Wanted fps:",50,100);
+		Render.g.drawString("Main Menu",Math.round(410*Render.xScale),Math.round(410*Render.yScale));
+		Render.g.drawRect(Math.round(388*Render.xScale), Math.round(390*Render.yScale), Math.round(100*Render.xScale), Math.round(39*Render.yScale));
+		Render.g.drawString("FPS: "+Render.tempframes,Math.round(25*Render.xScale),Math.round(25*Render.yScale));
+		Render.g.drawString("Wanted fps:",Math.round(25*Render.xScale),Math.round(50*Render.yScale));
 		for(byte x = 0; x < 4; x++){
-			Render.g.drawRect(55*x+175,90,50,50);
-			Render.g.drawString(""+(x+1)*15, 55*x+185, 120);
+			Render.g.drawRect(Math.round((26*x+88)*Render.xScale),Math.round(45*Render.yScale),Math.round(25*Render.xScale),Math.round(25*Render.yScale));
+			Render.g.drawString(""+(x+1)*15, Math.round((26*x+93)*Render.xScale), Math.round(60*Render.yScale));
 			Render.g.setColor(Color.black);
 			if(Render.wantedfps == (x+1)*15){
-				Render.g.fillRect(55*x+175,90,51,51);
+				Render.g.fillRect(Math.round((26*x+88)*Render.xScale),Math.round(45*Render.yScale),Math.round(26*Render.xScale),Math.round(26*Render.yScale));
 			}
 			Render.g.setColor(Color.white);
 		}
 	}
 	
 	public void mouse(){
-		if(Mouse.moveOver(Mouse.mx, Mouse.my, 775, 780, 200, 75) && Mouse.clicked){
+		if(Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(388*Render.xScale), Math.round(390*Render.yScale), Math.round(100*Render.xScale), Math.round(39*Render.yScale)) && Mouse.clicked){
 			Render.state = "Menu";
 			try {
 				Thread.sleep(120);
@@ -38,7 +38,7 @@ public class Options {
 			}
 		}
 		for(byte x = 0; x < 4; x++){
-			if(Mouse.moveOver(Mouse.mx, Mouse.my, 55*x+175, 90, 50, 50)){
+			if(Mouse.moveOver(Mouse.mx, Mouse.my, Math.round((26*x+88)*Render.xScale),Math.round(45*Render.yScale),Math.round(25*Render.xScale),Math.round(25*Render.yScale))){
 				Render.fpslimit = (byte) ((x+1) * 15);
 				Render.wantedfps = (byte) ((x+1)*15);
 				

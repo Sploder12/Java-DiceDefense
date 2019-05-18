@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 import com.sploder12.main.screens.*;
 
 public class Keyboard implements KeyListener{
-public static boolean[] curinpt = new boolean[2]; //see the screens for their index
+public static boolean[] curinpt = new boolean[4]; //see the screens for their index
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -25,12 +25,20 @@ public static boolean[] curinpt = new boolean[2]; //see the screens for their in
 			Save.name = "";
 			} else if(curinpt[1]){
 				Load.name = "";
-			}
+			} else if(curinpt[2]){
+				SaveWv.name = "";
+			} else if(curinpt[3]){
+				LoadWv.name = "";
+			} 
 		} else if ((int)e.getKeyChar()  != 8){
 			if(curinpt[0]){
 			Save.name = Save.name + key;
 			} else if(curinpt[1]){
 				Load.name = Load.name + key;
+			}else if(curinpt[2]){
+				SaveWv.name = SaveWv.name + key;
+			}else if(curinpt[3]){
+				LoadWv.name = LoadWv.name + key;
 			}
 		}
 	}
