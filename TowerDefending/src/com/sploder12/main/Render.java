@@ -3,6 +3,7 @@ package com.sploder12.main;
 import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
@@ -15,14 +16,15 @@ import com.sploder12.main.screens.*;
 
 public class Render extends Canvas implements Runnable{
 	
-	public static final int tW = 32,tH = 32; // tile width & tile height
+	public static final int tW = 16,tH = 16; // tile width & tile height
 	private static final long serialVersionUID = -5376655677283171262L;
-	public static final int WIDTH = 1000, HEIGHT = 900; //Play Area is 768x768
+	public static int WIDTH = 1000, HEIGHT = 900; //Play Area is 768x768
+	public static float xScale, yScale;
 	public static Thread render;
 	private Mouse mouse;
 	private Keyboard keyboard;
 	public boolean rendering = false;
-	public static Graphics g;
+	public static Graphics2D g;
 	public static Font newFont, currentFont;
 	public static Image tileset, paths;
 	public static BufferedImage enemies;
@@ -41,12 +43,12 @@ public class Render extends Canvas implements Runnable{
 		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tilesets
 		paths = ImageIO.read(new File("resources\\paths.png"));
 		enemies = ImageIO.read(new File("resources\\enemies.png"));
-		thumbnail = enemies.getScaledInstance(1280, -1, Image.SCALE_SMOOTH);
+		thumbnail = enemies.getScaledInstance(Math.round(160*xScale), -1, Image.SCALE_SMOOTH);
 		
 		}catch(Exception e){
 			System.out.println(e);
 		}
-		new Window(WIDTH, HEIGHT, "Defending Time", this);
+		new Window(WIDTH, HEIGHT, "Now With Extra Scales!", this);
 	}
 	
 	public synchronized void start(){
@@ -102,36 +104,39 @@ public class Render extends Canvas implements Runnable{
 	protected void drawTile(Graphics g, Tiles t, int x, int y){
         int mx = t.ordinal()%20;
         int my = t.ordinal()/20;	//draws the tiles in the location
-        g.drawImage(tileset, x, y, x+tW, y+tH,mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
+        g.drawImage(tileset, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
         Tiles z = Tiles.values()[MapMaker.selectedTile];
         mx = z.ordinal()%20;
         my = z.ordinal()/20;
-        g.drawImage(tileset, 865, 215, 865+tW, 215+tH,mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
+        g.drawImage(tileset, (int)Math.round(433*xScale), (int)Math.round(108*xScale), (int)Math.round((433+tW)*xScale), (int)Math.round((108+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
     }
 	
 	protected void drawPath(Graphics g, Paths t, int x, int y){
         int mx = t.ordinal()%20;
         int my = t.ordinal()/20;	//draws the tiles in the location
-        g.drawImage(paths, x, y, x+tW, y+tH,mx*tW, my*tH,  mx*tW+tW, my*tH+tH, this);
+        g.drawImage(paths, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
     }
 
 	protected void drawEnemy(Graphics g, Enemies t, int x, int y){
 		int mx = t.ordinal()%10;
-		int my = t.ordinal()/10;;
-		g.drawImage(thumbnail, x, y, x+128, y+128,mx*128, my*128,  mx*128+128, my*128+128, this);
+		int my = t.ordinal()/10;
+		g.drawImage(thumbnail, (int)Math.round(x*xScale),(int)Math.round(y*yScale), (int)Math.round((x+tW*4)*xScale), (int)Math.round((y+tH*4)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
 	}
 	private void render(){
+		
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
 			this.createBufferStrategy(3);          //Makes the FPS not 31mil also prevents flashing
 			return;
 		}
-		 g = bs.getDrawGraphics();
-		 currentFont = g.getFont();
-		   newFont = currentFont.deriveFont(currentFont.getSize() * 1.8F); 
+		 g =  (Graphics2D) bs.getDrawGraphics(); 
+		 
+		currentFont = g.getFont();
+		   newFont = currentFont.deriveFont(xScale*(currentFont.getSize() * 0.9F)); 
 		  g.setFont(newFont);
 		  g.setColor(Color.black);
 		  g.fillRect(0, 0, WIDTH, HEIGHT);
+		  
 		  try{
 			  String rendstate = "com.sploder12.main.screens." +state;
 			  Class<?> cls = Class.forName(rendstate);	//gets the screen to render from com.sploder.main.screens
@@ -142,18 +147,21 @@ public class Render extends Canvas implements Runnable{
 		  if(state == "MapMakeUI"){
 			  for(int i=0;i<24;i++){
 				  for(int j=0;j < 24;j++){
-					  drawTile(g, MapMaker.file_map[j][i], i*tW,j*tH); //draws the tiles
-			  		  drawPath(g, MapMaker.file_mappath[j][i], i*tW,j*tH);
+					  drawTile(g, MapMaker.file_map[j][i], (i*tW),(j*tH)); //draws the tiles
+			  		  drawPath(g, MapMaker.file_mappath[j][i], (i*tW),(j*tH)); //@TODO may need to be changed to 1/2
 				  }
 			  }
+			  
 		  }else if(state == "WaveMake"){
 			  for(int i = 0; i < 5; i++){
-				  drawEnemy(g,WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5)+i],i*128+50,150);
+				  drawEnemy(g,WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5)+i],i*64+26,75);
 			  }
-			  drawEnemy(g,Enemies.values()[WaveMaker.selectedenemy],815, 215);
+			  drawEnemy(g,Enemies.values()[WaveMaker.selectedenemy],408, 108);
 		  }
 		  g.dispose();
+		  
 	    	bs.show();
+	    	
 	    try {
 	    	if(fpslimit > 0 && fpslimit < 254){
 	    		Thread.sleep(1000/(fpslimit));			//frame limiter
@@ -167,6 +175,11 @@ public class Render extends Canvas implements Runnable{
 	
 	
 		public static void main(String[] args) {
+			WIDTH = Integer.parseInt(args[0]);
+			HEIGHT = Integer.parseInt(args[1]);
+			xScale = WIDTH/500; //apparently downscaling isn't exist
+			yScale = HEIGHT/450;
+			
 			new Render();
 		}
 }
