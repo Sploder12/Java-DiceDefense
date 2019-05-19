@@ -26,6 +26,17 @@ public class Options {
 			}
 			Render.g.setColor(Color.white);
 		}
+		Render.g.drawLine(Math.round(25*Render.xScale),Math.round(400*Render.yScale) , Math.round(325*Render.xScale), Math.round(400*Render.yScale));
+		Render.g.drawLine(Math.round(25*Render.xScale),Math.round(400*Render.yScale), Math.round(25*Render.xScale), Math.round(200*Render.yScale));
+		Render.g.setColor(Color.red);
+		for(byte graph = 0; graph < Render.fpsgraph.length-1; graph++){
+			if(Render.fpsgraph[graph] != 0){
+			Render.g.drawLine(Math.round((10*(graph+1)+15)*Render.xScale),Math.round((-(Render.fpsgraph[graph]*2)+400)*Render.yScale),Math.round((10*(graph+2)+15)*Render.xScale),Math.round((-(Render.fpsgraph[graph+1]*2)+400)*Render.yScale));
+			}
+		}
+		Render.g.setColor(Color.green);
+		Render.g.drawLine(Math.round(25*Render.xScale), Math.round((2*(-Render.wantedfps)+400)*Render.yScale), Math.round(325*Render.xScale), Math.round((2*(-Render.wantedfps)+400)*Render.yScale));
+		Render.g.setColor(Color.white);
 	}
 	
 	public void mouse(){

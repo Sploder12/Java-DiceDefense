@@ -31,6 +31,8 @@ public class Render extends Canvas implements Runnable{
 	public static byte fpslimit = 47, wantedfps = 45;
 	public static String state = "Menu";
 	public static String prevstate = "Menu";
+	public static int[] fpsgraph = new int[30];
+	byte graph = 0;
 	
 	public Render(){
 		System.out.println((char)1);
@@ -98,6 +100,21 @@ public class Render extends Canvas implements Runnable{
 					fpslimit += 2;
 				}
 				tempframes = frames;
+				
+				if(graph >= 29){
+					int[] tempgraph = new int[30];
+					tempgraph = fpsgraph;
+					for(byte shift = 0; shift < fpsgraph.length; shift++){
+						if(shift >= 29){
+							fpsgraph[shift] = tempframes;
+						}else{
+							fpsgraph[shift] = tempgraph[shift+1];
+						}
+					}
+				}else{
+					fpsgraph[graph] = tempframes;
+					graph++;
+				}
 				frames = 0;
 			}
 		}

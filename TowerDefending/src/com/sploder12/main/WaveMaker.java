@@ -15,7 +15,7 @@ public class WaveMaker {
 	public static byte currentwave;
 	public static byte wavepart = 1;
 	public static int selectedenemy = 0; //by deafult index of D4 then D6...
-	public static final byte[][] waittime= new byte[100][20];
+	public static byte[][] waittime= new byte[100][20];
 	public WaveMaker(){
 		
 	}
