@@ -33,7 +33,7 @@ public class Render extends Canvas implements Runnable{
 	public static String prevstate = "Menu";
 	
 	public Render(){
-		
+		System.out.println((char)1);
 		mouse = new Mouse();
 		this.addMouseListener(mouse);
 		keyboard = new Keyboard();	//starting mouse and keyboard listeners

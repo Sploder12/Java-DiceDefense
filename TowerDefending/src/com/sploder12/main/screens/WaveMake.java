@@ -69,7 +69,7 @@ public class WaveMake {
 			if(WaveMaker.selectedenemy > 0){
 				WaveMaker.selectedenemy--;
 			}else{
-				WaveMaker.selectedenemy = (short)(WaveMaker.enemies.length-1);
+				WaveMaker.selectedenemy = (3);
 			}
 			try {
 				Thread.sleep(100);
@@ -77,7 +77,7 @@ public class WaveMake {
 				e.printStackTrace();
 			}
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my,(int)Math.round(443*Render.xScale),(int)Math.round(50*Render.yScale),(int)Math.round(50*Render.xScale),(int)Math.round(25*Render.yScale))&& Mouse.clicked){
-			if(WaveMaker.selectedenemy < WaveMaker.enemies.length - 1){
+			if(WaveMaker.selectedenemy < 3){
 				WaveMaker.selectedenemy++;
 			}else{
 				WaveMaker.selectedenemy = 0;
