@@ -1,6 +1,7 @@
 package com.sploder12.main.screens;
 import java.awt.Color;
 
+import com.sploder12.main.Keyboard;
 import com.sploder12.main.Mouse;
 import com.sploder12.main.Render;
 import com.sploder12.main.WaveMaker;
@@ -41,17 +42,27 @@ public class WaveMake {
 		Render.g.drawString("<--",(int)Math.round(30*Render.xScale),(int)Math.round(168*Render.yScale));
 		Render.g.drawString("Main Menu",(int)Math.round(410*Render.xScale),(int)Math.round(410*Render.yScale));
 		Render.g.drawRect((int)Math.round(400*Render.xScale), (int)Math.round(390*Render.yScale), (int)Math.round(75*Render.xScale), (int)Math.round(38*Render.yScale));
-	
+		
+		Render.g.drawRect((int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale),(int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale));
+		Render.g.drawRect((int)Math.round(320*Render.xScale),(int)Math.round(25*Render.yScale),(int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale));
+		Render.g.drawString("-->",(int)Math.round(325*Render.xScale),(int)Math.round(40*Render.yScale));
+		Render.g.drawString("<--",(int)Math.round(30*Render.xScale),(int)Math.round(40*Render.yScale));
+		Render.g.drawRect(Math.round(150*Render.xScale), Math.round(175*Render.yScale), Math.round(75*Render.xScale), Math.round(25*Render.yScale));
+		Render.g.drawString("Wait after 5 enemies (milisecs Max:32,767)", Math.round(100*Render.xScale), Math.round(210*Render.yScale));
+		Render.g.drawString(""+WaveMaker.waittime[WaveMaker.currentwave][WaveMaker.wavepart-1], Math.round(175*Render.xScale), Math.round(190*Render.yScale));
+		
 	}
 	
 	private void mouse(){
 		for(byte x = 1; x <= 5; x++){
 			if(Mouse.moveOver(Mouse.mx, Mouse.my, (int)Math.round((64*x-39)*Render.xScale), (int)Math.round(75*Render.yScale), (int)Math.round(64*Render.xScale), (int)Math.round(64*Render.yScale)) && Mouse.clicked){
+				Keyboard.curinpt[4] = false;
 				WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5) + x - 1 ] = Enemies.values()[WaveMaker.selectedenemy];
 			}
 		}
 		
 		if(Mouse.moveOver(Mouse.mx, Mouse.my,(int)Math.round(25*Render.xScale),(int)Math.round(150*Render.yScale),(int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale)) && WaveMaker.wavepart > 1 && Mouse.clicked){
+			Keyboard.curinpt[4] = false;
 			WaveMaker.wavepart--;
 			try {
 				Thread.sleep(100);
@@ -59,6 +70,7 @@ public class WaveMake {
 				e.printStackTrace();
 			}
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my,(int)Math.round(320*Render.xScale),(int)Math.round(150*Render.yScale),(int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale)) && WaveMaker.wavepart < 20 && Mouse.clicked){
+			Keyboard.curinpt[4] = false;
 			WaveMaker.wavepart++;
 			try {
 				Thread.sleep(100);
@@ -66,6 +78,7 @@ public class WaveMake {
 				e.printStackTrace();
 			}
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my,(int)Math.round(388*Render.xScale),(int)Math.round(50*Render.yScale),(int)Math.round(50*Render.xScale),(int)Math.round(25*Render.yScale))&& Mouse.clicked){
+			Keyboard.curinpt[4] = false;
 			if(WaveMaker.selectedenemy > 0){
 				WaveMaker.selectedenemy--;
 			}else{
@@ -77,6 +90,7 @@ public class WaveMake {
 				e.printStackTrace();
 			}
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my,(int)Math.round(443*Render.xScale),(int)Math.round(50*Render.yScale),(int)Math.round(50*Render.xScale),(int)Math.round(25*Render.yScale))&& Mouse.clicked){
+			Keyboard.curinpt[4] = false;
 			if(WaveMaker.selectedenemy < 3){
 				WaveMaker.selectedenemy++;
 			}else{
@@ -88,11 +102,40 @@ public class WaveMake {
 				e.printStackTrace();
 			}
 		}else if(Mouse.moveOver(Mouse.mx, Mouse.my, (int)Math.round(400*Render.xScale), (int)Math.round(390*Render.yScale), (int)Math.round(75*Render.xScale), (int)Math.round(38*Render.yScale))){
+			Keyboard.curinpt[4] = false;
 			Render.state = "Menu";
 		}else if(Mouse.moveOver(Mouse.mx,Mouse.my,Math.round(13*Render.xScale),Math.round(390*Render.yScale),Math.round(100*Render.xScale),Math.round(38*Render.yScale))){
+			Keyboard.curinpt[4] = false;
 			Render.state = "SaveWv";
 		} else if(Mouse.moveOver(Mouse.mx,Mouse.my,Math.round(263*Render.xScale),Math.round(390*Render.yScale),Math.round(100*Render.xScale),Math.round(38*Render.yScale))){
+			Keyboard.curinpt[4] = false;
 			Render.state = "LoadWv";
+		}else if(Mouse.moveOver(Mouse.mx,Mouse.my, (int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale),(int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale))){
+			Keyboard.curinpt[4] = false;
+			if(WaveMaker.currentwave > 0){
+				WaveMaker.currentwave--;
+			}else{
+				WaveMaker.currentwave = 99;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}else if(Mouse.moveOver(Mouse.mx, Mouse.my,(int)Math.round(320*Render.xScale),(int)Math.round(25*Render.yScale),(int)Math.round(25*Render.xScale),(int)Math.round(25*Render.yScale))){
+			Keyboard.curinpt[4] = false;
+			if(WaveMaker.currentwave < 99){
+				WaveMaker.currentwave++;
+			}else{
+				WaveMaker.currentwave = 0;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}else if(Mouse.moveOver(Mouse.mx,Mouse.my,Math.round(150*Render.xScale), Math.round(175*Render.yScale), Math.round(75*Render.xScale), Math.round(25*Render.yScale))){
+			Keyboard.curinpt[4] = true;
 		}
 	}
 }

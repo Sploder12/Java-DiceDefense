@@ -51,7 +51,7 @@ public class MapMaker{
     
     public static boolean load(String map){
     	try{
-        	map = map + ".wdd";
+        	map = map + ".wd";
         	InputStream mapfile = new FileInputStream("maps/"+map);  
         	for(byte y = 0; y <48; y++){
         		for(byte x = 0; x <24; x++){

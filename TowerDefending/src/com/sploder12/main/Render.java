@@ -32,7 +32,8 @@ public class Render extends Canvas implements Runnable{
 	public static String state = "Menu";
 	public static String prevstate = "Menu";
 	public static int[] fpsgraph = new int[30];
-	byte graph = 0;
+	public static final String Version = "V0.1.1";
+	
 	
 	public Render(){
 		System.out.println((char)1);
@@ -52,7 +53,7 @@ public class Render extends Canvas implements Runnable{
 		}catch(Exception e){
 			System.out.println(e);
 		}
-		new Window(WIDTH, HEIGHT, "Now With Extra Scales!", this);
+		new Window(WIDTH, HEIGHT, "Almost As Beta As Crew!", this);
 	}
 	
 	public synchronized void start(){
@@ -100,21 +101,16 @@ public class Render extends Canvas implements Runnable{
 					fpslimit += 2;
 				}
 				tempframes = frames;
-				
-				if(graph >= 29){
-					int[] tempgraph = new int[30];
-					tempgraph = fpsgraph;
-					for(byte shift = 0; shift < fpsgraph.length; shift++){
-						if(shift >= 29){
-							fpsgraph[shift] = tempframes;
-						}else{
-							fpsgraph[shift] = tempgraph[shift+1];
-						}
+				int[] tempgraph = new int[30];
+				tempgraph = fpsgraph;
+				for(byte shift = 0; shift < fpsgraph.length; shift++){
+					if(shift >= 29){
+						fpsgraph[shift] = tempframes;
+					}else{
+						fpsgraph[shift] = tempgraph[shift+1];
 					}
-				}else{
-					fpsgraph[graph] = tempframes;
-					graph++;
 				}
+				
 				frames = 0;
 			}
 		}
@@ -194,8 +190,12 @@ public class Render extends Canvas implements Runnable{
 	
 	
 		public static void main(String[] args) {
+			try{
 			WIDTH = Integer.parseInt(args[0]);
 			HEIGHT = Integer.parseInt(args[1]);
+			}catch(Exception e){
+				System.out.println("No Width or Heigh Args Given, Starting 1000x900");
+			}
 			xScale = WIDTH/500F; 
 			yScale = HEIGHT/450F;
 			new Render();

@@ -13,6 +13,7 @@ public class Options {
 	
 	public void Rend(){
 		Render.g.setColor(Color.white);
+		Render.g.drawString(Render.Version,Math.round(410*Render.xScale),Math.round(375*Render.yScale));
 		Render.g.drawString("Main Menu",Math.round(410*Render.xScale),Math.round(410*Render.yScale));
 		Render.g.drawRect(Math.round(388*Render.xScale), Math.round(390*Render.yScale), Math.round(100*Render.xScale), Math.round(39*Render.yScale));
 		Render.g.drawString("FPS: "+Render.tempframes,Math.round(25*Render.xScale),Math.round(25*Render.yScale));
@@ -26,17 +27,19 @@ public class Options {
 			}
 			Render.g.setColor(Color.white);
 		}
+		Render.g.drawString("Fps Last 30sec",Math.round(150*Render.xScale),Math.round(250*Render.yScale));
 		Render.g.drawLine(Math.round(25*Render.xScale),Math.round(400*Render.yScale) , Math.round(325*Render.xScale), Math.round(400*Render.yScale));
-		Render.g.drawLine(Math.round(25*Render.xScale),Math.round(400*Render.yScale), Math.round(25*Render.xScale), Math.round(200*Render.yScale));
+		Render.g.drawLine(Math.round(25*Render.xScale),Math.round(400*Render.yScale), Math.round(25*Render.xScale), Math.round(250*Render.yScale));
+		Render.g.setColor(Color.green);
+		Render.g.drawLine(Math.round(25*Render.xScale), Math.round((2*(-Render.wantedfps)+400)*Render.yScale), Math.round(325*Render.xScale), Math.round((2*(-Render.wantedfps)+400)*Render.yScale));
 		Render.g.setColor(Color.red);
 		for(byte graph = 0; graph < Render.fpsgraph.length-1; graph++){
 			if(Render.fpsgraph[graph] != 0){
 			Render.g.drawLine(Math.round((10*(graph+1)+15)*Render.xScale),Math.round((-(Render.fpsgraph[graph]*2)+400)*Render.yScale),Math.round((10*(graph+2)+15)*Render.xScale),Math.round((-(Render.fpsgraph[graph+1]*2)+400)*Render.yScale));
 			}
 		}
-		Render.g.setColor(Color.green);
-		Render.g.drawLine(Math.round(25*Render.xScale), Math.round((2*(-Render.wantedfps)+400)*Render.yScale), Math.round(325*Render.xScale), Math.round((2*(-Render.wantedfps)+400)*Render.yScale));
 		Render.g.setColor(Color.white);
+		
 	}
 	
 	public void mouse(){

@@ -1,12 +1,13 @@
 package com.sploder12.main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 import com.sploder12.main.screens.*;
 
 public class Keyboard implements KeyListener{
-public static boolean[] curinpt = new boolean[4]; //see the screens for their index
-
+public static boolean[] curinpt = new boolean[5]; //see the screens for their index
+public static String tempstring = "";
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
@@ -39,6 +40,17 @@ public static boolean[] curinpt = new boolean[4]; //see the screens for their in
 				SaveWv.name = SaveWv.name + key;
 			}else if(curinpt[3]){
 				LoadWv.name = LoadWv.name + key;
+			}else if(curinpt[4]){
+				tempstring = tempstring +key;
+				try{
+					WaveMaker.waittime[WaveMaker.currentwave][WaveMaker.wavepart-1] = Short.parseShort(tempstring);
+					if(WaveMaker.waittime[WaveMaker.currentwave][WaveMaker.wavepart-1] > 32767){
+						WaveMaker.waittime[WaveMaker.currentwave][WaveMaker.wavepart-1] = 32767;
+						tempstring = "32767";
+					}
+				}catch(Exception s){
+					tempstring = "";
+				}
 			}
 		}
 	}

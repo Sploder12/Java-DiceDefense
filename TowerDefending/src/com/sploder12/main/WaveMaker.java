@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+
 import com.sploder12.main.screens.Enemies;
 
 
@@ -15,7 +16,7 @@ public class WaveMaker {
 	public static byte currentwave;
 	public static byte wavepart = 1;
 	public static int selectedenemy = 0; //by deafult index of D4 then D6...
-	public static byte[][] waittime= new byte[100][20];
+	public static short[][] waittime= new short[100][20];
 	public WaveMaker(){
 		
 	}
@@ -42,10 +43,23 @@ public class WaveMaker {
         			}else{
         				output.append((char)out);
         			}
+        			
         			if((enemy+1)%5 == 0 && enemy != 0){
         				output.append('~');
-        				if(waittime[wavenum][enemy/5] != 0){
-        				output.append((char)(waittime[wavenum][enemy/5]+32));
+        				if(waittime[wavenum][((enemy+1)/5)-1] != 0){
+        					byte[] tobytes = new byte[(int) Math.ceil(waittime[wavenum][((enemy+1)/5)-1]/95)+1];
+            				short tempnumb = waittime[wavenum][((enemy+1)/5)-1];		
+        					for(short outw = 0; outw < tobytes.length; outw++){
+        						System.out.println(tempnumb);
+        						if(tempnumb >= 95){
+        							tobytes[outw] = 95;
+        							tempnumb -= 95;
+        						}else{
+        							tobytes[outw] = (byte) (tempnumb);
+        						}
+        						output.append((char)(tobytes[outw]+32));
+        					}
+        				
         				}else{
         					output.append((char)80);
         				}
@@ -67,7 +81,8 @@ public class WaveMaker {
 			int enemies = 0;
 			int wavenumb = 0;
 			boolean waitinput = false;
-			byte winput = 0;
+			short winput = 0;
+			short total = 0;
 			
         	InputStream wavefile = new FileInputStream("waves/"+wave); 
         	while(reading){
@@ -92,7 +107,6 @@ public class WaveMaker {
         				if(enemies < 100){
         					
         					waves[wavenumb][enemies] = redest;
-        					System.out.println(waves[wavenumb][enemies]);
         					enemies++;
         				}else{
         					wavenumb++;
@@ -100,9 +114,12 @@ public class WaveMaker {
         				}
         				
         			}else if(red != 94 && enemies >= 5){
-        				waittime[wavenumb][(enemies/5)-1] = (byte)red;
+        				System.out.println(red);
+        				 total = (short)(total+red);		
         			}else{
         				if(winput == 1){
+        					waittime[wavenumb][(enemies/5)-1] = total;
+        					
         					waitinput = false;
         					winput = 0;
         				}else{
