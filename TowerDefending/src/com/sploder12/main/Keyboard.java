@@ -1,7 +1,6 @@
 package com.sploder12.main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 
 import com.sploder12.main.screens.*;
 

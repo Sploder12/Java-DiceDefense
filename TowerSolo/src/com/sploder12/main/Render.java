@@ -1,23 +1,23 @@
 package com.sploder12.main;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.awt.Color;
-import java.awt.Image;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import com.sploder12.main.screens.*;
+import objects.*;
+import screens.GameTime;
 
 public class Render extends Canvas implements Runnable{
-	
+	private static final long serialVersionUID = -9013264526583867430L;
 	public static final int tW = 16,tH = 16; // tile width & tile height
-	private static final long serialVersionUID = -5376655677283171262L;
 	public static int WIDTH = 1000, HEIGHT = 900; //Play Area is 768x768
 	public static float xScale, yScale;
 	public static Thread render;
@@ -26,32 +26,32 @@ public class Render extends Canvas implements Runnable{
 	public boolean rendering = false;
 	public static Graphics2D g;
 	public static Font newFont, currentFont;
-	public static BufferedImage tileset, paths,enemies;
-	public Image enemiescale,pathscale,tilescale;
+	public static BufferedImage tileset,enemies;
+	public Image enemiescale,tilescale;
 	public static byte fpslimit = 47, wantedfps = 45;
 	public static String state = "Menu";
 	public static int[] fpsgraph = new int[30];
-	public static final String Version = "V0.1.1";
-	
+	public static final String Version = "V0.0.1";
+	public static int mapselect = 0;
+	public static WaveManager waving;
 	
 	public Render(){
 		mouse = new Mouse();
+		this.addMouseMotionListener(mouse);
 		this.addMouseListener(mouse);
 		keyboard = new Keyboard();	//starting mouse and keyboard listeners
 		this.addKeyListener(keyboard);
 		
 		try{
 		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tilesets
-		paths = ImageIO.read(new File("resources\\paths.png"));
 		enemies = ImageIO.read(new File("resources\\enemies.png"));
 		enemiescale = enemies.getScaledInstance(Math.round(160*xScale), -1, Image.SCALE_SMOOTH);
-		pathscale = paths.getScaledInstance(Math.round(64*xScale), -1, Image.SCALE_SMOOTH);
 		tilescale = tileset.getScaledInstance(Math.round(320*xScale), -1, Image.SCALE_SMOOTH);
 		
 		}catch(Exception e){
 			System.out.println(e);
 		}
-		new Window(WIDTH, HEIGHT, "Almost As Beta As Crew!", this);
+		new Window(WIDTH, HEIGHT, "Now with more dice dicing!", this);
 	}
 	
 	public synchronized void start(){
@@ -67,6 +67,18 @@ public class Render extends Canvas implements Runnable{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	protected void drawTile(Graphics g, Tiles t, int x, int y){
+        int mx = t.ordinal()%20;
+        int my = t.ordinal()/20;	//draws the tiles in the location
+        g.drawImage(tilescale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
+	}
+	
+	protected void drawEnemy(Graphics g, Enemies t, int x, int y){
+        int mx = t.ordinal()%10;
+        int my = t.ordinal()/10;	//draws the tiles in the location
+        g.drawImage(enemiescale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
 	}
 	
 	public static int tempframes;
@@ -115,27 +127,7 @@ public class Render extends Canvas implements Runnable{
 		stop();
 	}
 	
-	protected void drawTile(Graphics g, Tiles t, int x, int y){
-        int mx = t.ordinal()%20;
-        int my = t.ordinal()/20;	//draws the tiles in the location
-        g.drawImage(tilescale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
-        Tiles z = Tiles.values()[MapMaker.selectedTile];
-        mx = z.ordinal()%20;
-        my = z.ordinal()/20;
-        g.drawImage(tilescale, (int)Math.round(433*xScale), (int)Math.round(108*xScale), (int)Math.round((433+tW)*xScale), (int)Math.round((108+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
-    }
 	
-	protected void drawPath(Graphics g, Paths t, int x, int y){
-        int mx = t.ordinal()%4;	//draws the tiles in the location
-        int my = t.ordinal()/4;
-        g.drawImage(pathscale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round(((mx*tW)*xScale)), (int)Math.round((my*tH*yScale)),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
-    }
-
-	protected void drawEnemy(Graphics g, Enemies t, int x, int y){
-		int mx = t.ordinal()%10;
-		int my = t.ordinal()/10;
-		g.drawImage(enemiescale, (int)Math.round(x*xScale),(int)Math.round(y*yScale), (int)Math.round((x+tW*4)*xScale), (int)Math.round((y+tH*4)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
-	}
 	private void render(){
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null){
@@ -150,28 +142,52 @@ public class Render extends Canvas implements Runnable{
 		  g.setColor(Color.black);
 		  g.fillRect(0, 0, WIDTH, HEIGHT);
 		  
+		  if(state == "DefualtMaps"){
+			  for(int i=0;i<24;i++){
+				  for(int j=0;j < 24;j++){
+					  drawTile(g, Main.file_map[j][i], (i*tW)+Math.round(27*xScale),(j*tH)); //draws the tiles
+				  }
+			  }
+		  }else if(state == "GameTime"){
+			  for(int i=0;i<24;i++){
+				  for(int j=0;j < 24;j++){
+					  drawTile(g, Main.file_map[j][i], (i*tW),(j*tH)); //draws the tiles
+				  }
+			  }
+		  }
+		  
+		  
+		 
 		  try{
-			  String rendstate = "com.sploder12.main.screens." +state;
+			  String rendstate = "screens." +state;
 			  Class<?> cls = Class.forName(rendstate);	//gets the screen to render from com.sploder.main.screens
 			  cls.newInstance();
 		  } catch(Exception e){
 			  System.out.println(e);
 		  }
-		  if(state == "MapMakeUI"){
-			  for(int i=0;i<24;i++){
-				  for(int j=0;j < 24;j++){
-					  drawTile(g, MapMaker.file_map[j][i], (i*tW),(j*tH)); //draws the tiles
-			  		  drawPath(g, MapMaker.file_mappath[j][i], (i*tW),(j*tH));
+		  if(state == "GameTime" && WaveManager.canreturn){
+			  Enemy[] enemingus = waving.getEnemies(); 
+			  for(int showenemies = 0; showenemies < enemingus.length; showenemies++){
+				  if(enemingus[showenemies] != null){
+					  //System.out.println(enemingus[showenemies].visible);
+					  try{
+						  if(enemingus[showenemies].visible){
+							  drawEnemy(g, enemingus[showenemies].getEnemy(),enemingus[showenemies].getEnemyXCord()*16,enemingus[showenemies].getEnemyYCord()*16);
+							  
+						  }
+					  }catch(Exception e){
+						  e.printStackTrace();
+					  }
 				  }
-			  }
-			  
-		  }else if(state == "WaveMake"){
-			  for(int i = 0; i < 5; i++){
-				  drawEnemy(g,WaveMaker.waves[WaveMaker.currentwave][((WaveMaker.wavepart-1)*5)+i],i*64+26,75);
-			  }
-			  drawEnemy(g,Enemies.values()[WaveMaker.selectedenemy],408, 108);
+			 }
 		  }
-		 g.dispose();
+		  
+
+		  
+		  
+		  
+		  
+		  g.dispose();
 		  
 	    	bs.show();
 	    	
@@ -185,17 +201,5 @@ public class Render extends Canvas implements Runnable{
 			e.printStackTrace();
 		}
 	}
-	
-	
-		public static void main(String[] args) {
-			try{
-			WIDTH = Integer.parseInt(args[0]);
-			HEIGHT = Integer.parseInt(args[1]);
-			}catch(Exception e){
-				System.out.println("No Width or Heigh Args Given, Starting 1000x900");
-			}
-			xScale = WIDTH/500F; 
-			yScale = HEIGHT/450F;
-			new Render();
-		}
 }
+

@@ -1,4 +1,4 @@
-package com.sploder12.main.screens;
+package objects;
 
 import java.util.Arrays;
 
