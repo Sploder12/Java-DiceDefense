@@ -13,7 +13,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import objects.*;
-import screens.GameTime;
 
 public class Render extends Canvas implements Runnable{
 	private static final long serialVersionUID = -9013264526583867430L;
@@ -172,7 +171,7 @@ public class Render extends Canvas implements Runnable{
 					  //System.out.println(enemingus[showenemies].visible);
 					  try{
 						  if(enemingus[showenemies].visible){
-							  drawEnemy(g, enemingus[showenemies].getEnemy(),enemingus[showenemies].getEnemyXCord()*16,enemingus[showenemies].getEnemyYCord()*16);
+							  drawEnemy(g, enemingus[showenemies].getEnemy(),enemingus[showenemies].getEnemyXCord(),enemingus[showenemies].getEnemyYCord());
 							  
 						  }
 					  }catch(Exception e){

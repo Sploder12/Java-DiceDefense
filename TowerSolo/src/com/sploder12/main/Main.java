@@ -18,7 +18,7 @@ public class Main implements Runnable{
 	public static byte currentwave = 0;
 	public static Enemies[][] waves = Enemies.arrayOfDefault(100);
 	public static short[][] waittime= new short[100][20];
-	public static byte xstart, ystart, xend, yend;
+	public static byte xstart, ystart;
 	private final String[] LOADNAME = {"Grass_Fields","Watery_Way","template"};
 	private final String[] WAVENAME = {};
 	public static byte difficulty = 0;
@@ -143,9 +143,6 @@ public class Main implements Runnable{
 				if(file_mappath[y][x] == Paths.TspcStart){
 					xstart = x;
 					ystart = y;
-				}else if(file_mappath[y][x] == Paths.TspcStart){
-					xend = x;
-					yend = y;
 				}
 			}
 		}

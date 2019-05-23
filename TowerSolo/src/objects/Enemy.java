@@ -1,7 +1,6 @@
 package objects;
 
 import com.sploder12.main.Main;
-import com.sploder12.main.Render;
 
 import sploder12.json.JSON;
 import objects.Enemies;
@@ -14,7 +13,6 @@ public class Enemy implements Runnable{
 	private int hp = 0,speed = 0,Baddie = 0;
 	private String special = "none";
 	private byte xcord = -10, ycord = -10, prevxcord=0, prevycord=0;
-	private byte xend = -10, yend = -10;
 	private int xdisp = 0, ydisp = 0;
 	public boolean running = false;
 	public boolean visible = false;
@@ -47,8 +45,13 @@ public class Enemy implements Runnable{
 		return enalme;
 	}
 	
-	public synchronized void setEnemyHp(int newHp){
+	public boolean setEnemyHp(int newHp){
+		if(hp > 0){
 		hp = newHp;
+		return true;
+		}else{
+			return false;
+		}
 	}
 	
 	public synchronized void wakeup(){
@@ -57,14 +60,14 @@ public class Enemy implements Runnable{
 		}
 	}
 	
-	public Enemy(Enemies enemy, byte xstart, byte ystart, byte xEnd, byte yEnd){
+	public Enemy(Enemies enemy, byte xstart, byte ystart){
 		
 		json = new JSON();
 		enalme = enemy;
+		xdisp = xstart*16;
+		ydisp = ystart*16;
 		xcord = xstart;
 		ycord = ystart;
-		xend = xEnd;
-		yend = yEnd;
 		Baddie = ENEMYINDEX[enemy.ordinal()];
 		name = ENEMYNAME[enemy.ordinal()];
 		if(enemy.ordinal() == 0){
@@ -76,6 +79,7 @@ public class Enemy implements Runnable{
 		enemie = new Thread(this);
 		enemie.start();
 	}
+	private boolean check2 = true;
 	@Override
 	public synchronized void run() {
 		try {
@@ -86,19 +90,23 @@ public class Enemy implements Runnable{
 			e1.printStackTrace();
 		}
 		
-		while(hp > 0){
+		while(hp > 0 && Main.file_mappath[ycord+1][xcord] != Paths.TqtEnd && Main.file_mappath[ycord][xcord+1] != Paths.TqtEnd && check2){
 			visible = true;
 			
 			
 			AI();
-			xdisp = xcord;
-			ydisp = ycord;
+			if(xdisp %16==0){
+				xcord = (byte) (xdisp/16);
+			}
+			if(ydisp %16==0){
+				ycord = (byte) (ydisp/16);
+			}
 			
 			if(Baddie == 10){
 				speed = (-hp+6)*8+16;
 			}
 			try {
-		    	Thread.sleep(-speed+128);
+		    	Thread.sleep((-speed+128)/5);
 			} catch (InterruptedException e) {	
 				e.printStackTrace();
 			}
@@ -110,36 +118,69 @@ public class Enemy implements Runnable{
 			e.printStackTrace();
 		}
 	}
-	
+	private boolean incx=false,incy=false,decx=false,decy = false;
 	public void AI(){
+		
+		if(xdisp%16 == 0 && ydisp%16 == 0){
+			incx=false;
+			incy=false;
+			decx=false;
+			decy=false;
+			
 		if(ycord != 0 && xcord != 0){
-			if(Main.file_mappath[ycord][xcord+1] == Paths.TexPath && xcord+1 != prevxcord){
+			if((Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TexPath) && xcord+1 != prevxcord ){
 				prevxcord = xcord;
 				prevycord = -10;
-				xcord = (byte)(xcord+1);
-			}else if(Main.file_mappath[ycord][xcord-1] == Paths.TexPath && xcord-1 != prevxcord){
+				xdisp++;
+				incx=true;
+			}else if((Main.file_mappath[ycord][xcord-1] == Paths.TqtEnd || Main.file_mappath[ycord][xcord-1] == Paths.TexPath) && xcord-1 != prevxcord){
+				if(Main.file_mappath[ycord][xcord-1] == Paths.TqtEnd){
+					check2 = false;
+				}
 				prevxcord = xcord;
 				prevycord = -10;
-				xcord = (byte)(xcord-1);
-			}else if(Main.file_mappath[ycord+1][xcord] == Paths.TexPath && ycord+1 != prevycord){
+				xdisp--;
+				decx=true;
+			}else if((Main.file_mappath[ycord+1][xcord] == Paths.TqtEnd || Main.file_mappath[ycord+1][xcord] == Paths.TexPath )&& ycord+1 != prevycord){
 				prevycord = ycord;
 				prevxcord = -10;
-				ycord = (byte)(ycord+1);
-			}else if(Main.file_mappath[ycord-1][xcord] == Paths.TexPath && ycord-1 != prevycord){
+				ydisp++;
+				incy=true;
+			}else if((Main.file_mappath[ycord-1][xcord] == Paths.TqtEnd ||Main.file_mappath[ycord-1][xcord] == Paths.TexPath) && ycord-1 != prevycord){
+				if(Main.file_mappath[ycord-1][xcord] == Paths.TqtEnd){
+					check2 = false;
+				}
 				prevycord = ycord;
 				prevxcord = -10;
-				ycord = (byte)(ycord-1);
+				ydisp--;
+				decy=true;
 			}
 		}else{
-			if(Main.file_mappath[ycord][xcord+1] == Paths.TexPath && xcord+1 != prevxcord){
+			if((Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TexPath )&& xcord+1 != prevxcord){
 				prevxcord = xcord;
-				xcord = (byte)(xcord+1);
-			}else if(Main.file_mappath[ycord+1][xcord] == Paths.TexPath && ycord+1 != prevycord){
+				prevycord = -10;
+				xdisp++;
+				incx=true;
+			}else if((Main.file_mappath[ycord+1][xcord] == Paths.TqtEnd ||Main.file_mappath[ycord+1][xcord] == Paths.TexPath) && ycord+1 != prevycord){
 				prevycord = ycord;
-				ycord = (byte)(ycord+1);
+				prevxcord = -10;
+				ydisp++;
+				incy=true;
 			}
 		}
-		
-		
+		}else if(Main.file_mappath[ycord][xcord] != Paths.TqtEnd){
+			if(incx){
+				xdisp++;
+			}
+			if(decx){
+				xdisp--;
+			}
+			if(incy){
+				ydisp++;
+			}
+			if(decy){
+				ydisp--;
+			}
+		}
 	}
 }

@@ -2,12 +2,14 @@ package com.sploder12.main;
 
 import objects.Enemies;
 import objects.Enemy;
+import objects.Unit;
+import objects.Units;
 
 public class WaveManager implements Runnable{
 	public static boolean sending;
 	private Thread waveman;
 	int curenemysent = 0;
-	public Enemy[][] enemies = new Enemy[100][Main.waves[Main.currentwave].length];
+	public static Enemy[][] enemies = new Enemy[100][Main.waves[Main.currentwave].length];
 	public static boolean canreturn = false;
 	
 	public Enemy[] getEnemies(){
@@ -15,16 +17,18 @@ public class WaveManager implements Runnable{
 	}
 	
 	public WaveManager(){
+		
 		try {
 			for(byte x = 0; x < Main.waves[Main.currentwave].length;x++){
 				if(Main.waves[Main.currentwave][x] != Enemies.t59){
-					enemies[Main.currentwave][x] = new Enemy(Main.waves[Main.currentwave][x],Main.xstart,Main.ystart,Main.xend,Main.yend);
+					enemies[Main.currentwave][x] = new Enemy(Main.waves[Main.currentwave][x],Main.xstart,Main.ystart);
 					canreturn = true;
 				}
 			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		new Units(128,128,Unit.DiceRoller);
 		waveman = new Thread(this);
 		waveman.start();
 	}
@@ -47,7 +51,6 @@ public class WaveManager implements Runnable{
 					try{
 						if(enemies[Main.currentwave][curenemysent] != null){
 							enemies[Main.currentwave][curenemysent].wakeup();
-							System.out.println("To finally roam and invite");
 						}
 					}catch(Exception e){
 						e.printStackTrace();
