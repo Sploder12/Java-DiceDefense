@@ -28,7 +28,7 @@ public class Render extends Canvas implements Runnable{
 	public static BufferedImage tileset,enemies;
 	public Image enemiescale,tilescale;
 	public static byte fpslimit = 47, wantedfps = 45;
-	public static String state = "Menu";
+	public volatile static String state = "Menu";
 	public static int[] fpsgraph = new int[30];
 	public static final String Version = "V0.0.1";
 	public static int mapselect = 0;
@@ -167,17 +167,12 @@ public class Render extends Canvas implements Runnable{
 		  if(state == "GameTime" && WaveManager.canreturn){
 			  Enemy[] enemingus = waving.getEnemies(); 
 			  for(int showenemies = 0; showenemies < enemingus.length; showenemies++){
-				  if(enemingus[showenemies] != null){
+				 if(enemingus[showenemies] != null){
 					  //System.out.println(enemingus[showenemies].visible);
-					  try{
-						  if(enemingus[showenemies].visible){
-							  drawEnemy(g, enemingus[showenemies].getEnemy(),enemingus[showenemies].getEnemyXCord(),enemingus[showenemies].getEnemyYCord());
-							  
-						  }
-					  }catch(Exception e){
-						  e.printStackTrace();
-					  }
-				  }
+					  if(enemingus[showenemies].visible){
+						  drawEnemy(g, enemingus[showenemies].getEnemy(),enemingus[showenemies].getEnemyXCord(),enemingus[showenemies].getEnemyYCord());
+					  } 
+				 }
 			 }
 		  }
 		  

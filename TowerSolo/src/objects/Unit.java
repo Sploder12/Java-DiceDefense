@@ -1,7 +1,7 @@
 package objects;
 
 public enum Unit {
-DiceRoller(256,2,128,500,"Die Roller"), DiceDicer(8,1,64,500,"Dice Dicer");
+DiceRoller(128,2,64,500,"Die Roller"), DiceDicer(64,1,64,500,"Dice Dicer");
 
 private String dispname;
 private int range;

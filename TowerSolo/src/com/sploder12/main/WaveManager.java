@@ -2,15 +2,15 @@ package com.sploder12.main;
 
 import objects.Enemies;
 import objects.Enemy;
-import objects.Unit;
-import objects.Units;
+
 
 public class WaveManager implements Runnable{
 	public static boolean sending;
 	private Thread waveman;
-	int curenemysent = 0;
+	public static int curenemysent = 0;
 	public static Enemy[][] enemies = new Enemy[100][Main.waves[Main.currentwave].length];
 	public static boolean canreturn = false;
+	public static boolean wavefin = true;
 	
 	public Enemy[] getEnemies(){
 		return enemies[Main.currentwave];
@@ -28,7 +28,7 @@ public class WaveManager implements Runnable{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		new Units(128,128,Unit.DiceRoller);
+		
 		waveman = new Thread(this);
 		waveman.start();
 	}
@@ -37,52 +37,50 @@ public class WaveManager implements Runnable{
 	@Override
 	public synchronized void run() {
 		
+		long sendtimer = System.currentTimeMillis();
+		
+		long waittime = 0;
+		boolean waitor = false;
+		long sendothertimer = System.currentTimeMillis();
 		while(Render.state == "GameTime"){
-			try {
-				Thread.sleep(25);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			while(sending){
+			if(waitor){
 				
-				if(curenemysent < 99 && Main.waves[Main.currentwave][curenemysent] == Enemies.t59 ){
-					curenemysent++;
-				}else{
-					try{
-						if(enemies[Main.currentwave][curenemysent] != null){
-							enemies[Main.currentwave][curenemysent].wakeup();
-						}
-					}catch(Exception e){
-						e.printStackTrace();
-					}
 				
-					if((curenemysent+1)%5 == 0 && curenemysent != 0 && curenemysent < 99){
-						try {
-							Thread.sleep(Main.waittime[Main.currentwave][(curenemysent+1)/5]);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}else{
-						try {
-							Thread.sleep(150);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+				if(System.currentTimeMillis()-sendothertimer > waittime){
+					
+					if(enemies[Main.currentwave][curenemysent] != null){
+						enemies[Main.currentwave][curenemysent].setCheck(true);
 					}
+					sendothertimer += waittime;
+					waitor = false;
+					sendtimer = System.currentTimeMillis();
 					if(curenemysent < 99){
 						curenemysent++;
 					}
 				}
-			
-			
-			
-			
+			}else if(sending && System.currentTimeMillis()- sendtimer > 25){
+				
+				sendtimer+=25;
+				if(curenemysent < 99 && Main.waves[Main.currentwave][curenemysent] == Enemies.t59 ){
+					curenemysent++;
+				}else{
+					waittime =((curenemysent+1)%5 == 0 && curenemysent != 0 && curenemysent < 99)?Main.waittime[Main.currentwave][(curenemysent+1)/5]:150;
+					sendothertimer = System.currentTimeMillis();
+					waitor = true;
+				}
 				if(curenemysent >= 100){
 					Main.currentwave++;
 					sending = false;
 				}
 				
 			}
+			
+			for(short x = 0; x < enemies[Main.currentwave].length; x++){
+				if(enemies[Main.currentwave][x] == null || !enemies[Main.currentwave][x].getCheck())continue;
+				enemies[Main.currentwave][x].go();
+			}
+				
+			
 			
 		}
 		try {

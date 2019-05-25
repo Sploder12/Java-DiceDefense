@@ -1,10 +1,11 @@
 package objects;
 
 import com.sploder12.main.Main;
+import com.sploder12.main.WaveManager;
 
 import sploder12.json.JSON;
 import objects.Enemies;
-public class Enemy implements Runnable{
+public class Enemy {
 	private Thread enemie;
 	private final int[] ENEMYINDEX= {10,75,139,204};
 	private final String[] ENEMYNAME = {"D6","D4","D8","D10"};
@@ -13,41 +14,51 @@ public class Enemy implements Runnable{
 	private int hp = 0,speed = 0,Baddie = 0;
 	private String special = "none";
 	private byte xcord = -10, ycord = -10, prevxcord=0, prevycord=0;
-	private int xdisp = 0, ydisp = 0;
-	public boolean running = false;
+	private volatile int xdisp = 0, ydisp = 0;
 	public boolean visible = false;
 	public Enemies enalme;
-	private boolean sleeping = false;
+	private long timer = System.currentTimeMillis();
+	private boolean check2 = true;
+	private boolean check = false;
+	
+	public void setCheck(boolean set){
+		timer = System.currentTimeMillis();
+		check = set;
+	}
+	
+	public boolean getCheck(){
+		return check;
+	}
 	
 	public boolean getVisible(){
-		return visible;
+		return this.visible;
 	}
 	
 	public int getEnemyXCord(){
-		return xdisp;
+		return this.xdisp;
 	}
 	
 	public void setEnemyXCord(int xcorde){
-		xdisp = xcorde;
+		this.xdisp = xcorde;
 	}
 	public int getEnemyYCord(){
-		return ydisp;
+		return this.ydisp;
 	}
 	public void setEnemyYCord(int ycorde){
-		ydisp = ycorde;
+		this.ydisp = ycorde;
 	}
 	
 	public int getEnemyHp(){
-		return hp;
+		return this.hp;
 	}
 	
 	public Enemies getEnemy(){
-		return enalme;
+		return this.enalme;
 	}
 	
 	public boolean setEnemyHp(int newHp){
-		if(hp > 0){
-		hp = newHp;
+		if(this.hp > 0){
+		this.hp = newHp;
 		return true;
 		}else{
 			return false;
@@ -63,60 +74,56 @@ public class Enemy implements Runnable{
 	public Enemy(Enemies enemy, byte xstart, byte ystart){
 		
 		json = new JSON();
-		enalme = enemy;
-		xdisp = xstart*16;
-		ydisp = ystart*16;
-		xcord = xstart;
-		ycord = ystart;
-		Baddie = ENEMYINDEX[enemy.ordinal()];
-		name = ENEMYNAME[enemy.ordinal()];
+		this.enalme = enemy;
+		this.xdisp = xstart*16;
+		this.ydisp = ystart*16;
+		this.xcord = xstart;
+		this.ycord = ystart;
+		this.Baddie = ENEMYINDEX[enemy.ordinal()];
+		this.name = ENEMYNAME[enemy.ordinal()];
 		if(enemy.ordinal() == 0){
 			name = "D6";
 		}
-		hp = json.getIntValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"hp",Baddie));
-		speed =json.getIntValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"speed",Baddie));
-		special = json.getValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"special",Baddie));
-		enemie = new Thread(this);
-		enemie.start();
-	}
-	private boolean check2 = true;
-	@Override
-	public synchronized void run() {
-		try {
-			synchronized(Enemy.this){
-				this.wait();
-			}
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		this.hp = json.getIntValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"hp",Baddie));
+		this.speed =json.getIntValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"speed",Baddie));
+		this.special = json.getValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"special",Baddie));
 		
-		while(hp > 0 && Main.file_mappath[ycord+1][xcord] != Paths.TqtEnd && Main.file_mappath[ycord][xcord+1] != Paths.TqtEnd && check2){
+	}
+	
+	public void go() {
+		/*try {
+		*	synchronized(Enemy.this){
+		*		this.wait();
+		*	}
+		*} catch (InterruptedException e1) {
+		*	e1.printStackTrace();
+		}*/
+		
+		if(hp > 0 && Main.file_mappath[ycord+1][xcord] != Paths.TqtEnd && Main.file_mappath[ycord][xcord+1] != Paths.TqtEnd && check2 && check){
 			visible = true;
 			
+			if(System.currentTimeMillis() - timer > (-speed+128)/4){
+				timer+= (-speed+128)/4;
+				AI();
+				if(xdisp %16==0){
+					xcord = (byte) (xdisp/16);
+				}
+				if(ydisp %16==0){
+					ycord = (byte) (ydisp/16);
+				}
 			
-			AI();
-			if(xdisp %16==0){
-				xcord = (byte) (xdisp/16);
-			}
-			if(ydisp %16==0){
-				ycord = (byte) (ydisp/16);
-			}
+				if(Baddie == 10){
+					speed = (-hp+6)*8+16;
+				}
 			
-			if(Baddie == 10){
-				speed = (-hp+6)*8+16;
+		    	//Thread.sleep((-speed+128)/5);
+				
 			}
-			try {
-		    	Thread.sleep((-speed+128)/5);
-			} catch (InterruptedException e) {	
-				e.printStackTrace();
-			}
-		}
-		try {
+		}else{
 			visible = false;
-			enemie.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
+		
+			//visible = false;
 	}
 	private boolean incx=false,incy=false,decx=false,decy = false;
 	public void AI(){
@@ -126,6 +133,7 @@ public class Enemy implements Runnable{
 			incy=false;
 			decx=false;
 			decy=false;
+			
 			
 		if(ycord != 0 && xcord != 0){
 			if((Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TexPath) && xcord+1 != prevxcord ){
@@ -183,4 +191,6 @@ public class Enemy implements Runnable{
 			}
 		}
 	}
+
+	
 }
