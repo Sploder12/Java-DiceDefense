@@ -6,7 +6,7 @@ import com.sploder12.main.*;
 
 
 public class DefualtMaps {
-	private final String[] NAME = {"Grass Fields","Watery Way" ,"Custom Maps"};
+	private final String[] NAME = {"Grass Fields","Watery Way" ,"Test","TestTest","Custom Maps"};
 	
 	
 

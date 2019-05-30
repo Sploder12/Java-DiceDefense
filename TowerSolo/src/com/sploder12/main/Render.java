@@ -102,7 +102,7 @@ public class Render extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				System.out.println("(Graphic)FPS: " + frames);  
+				//System.out.println("(Graphic)FPS: " + frames);  
 				//System.out.println(fpslimit);
 				if(frames > wantedfps+2 && fpslimit > 2){
 					fpslimit -= 2;

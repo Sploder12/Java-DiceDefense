@@ -1,7 +1,7 @@
 package objects;
 
 public enum Unit {
-DiceRoller(128,2,64,500,"Die Roller"), DiceDicer(64,1,64,500,"Dice Dicer");
+LazerPointer(128,2,64,500,"Lazer Pointer"), LazerRing(256,4,256,500,"LFG");
 
 private String dispname;
 private int range;

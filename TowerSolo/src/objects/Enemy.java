@@ -56,9 +56,9 @@ public class Enemy {
 		return this.enalme;
 	}
 	
-	public boolean setEnemyHp(int newHp){
+	public boolean setEnemyHp(int damage){
 		if(this.hp > 0){
-		this.hp = newHp;
+		this.hp = hp - damage;
 		return true;
 		}else{
 			return false;
@@ -89,7 +89,28 @@ public class Enemy {
 		this.special = json.getValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"special",Baddie));
 		
 	}
+	public boolean alive = true;
 	
+	public void go2(){
+		visible = true;
+		if(System.currentTimeMillis() - timer > (-speed+128)/4){
+			timer+= (-speed+128)/4;
+			AI();
+			if(xdisp %16==0){
+				xcord = (byte) (xdisp/16);
+			}
+			if(ydisp %16==0){
+				ycord = (byte) (ydisp/16);
+			}
+		
+			if(Baddie == 10){
+				speed = (-hp+6)*8+16;
+			}
+		
+	    	//Thread.sleep((-speed+128)/5);
+			
+		}
+	}
 	public void go() {
 		/*try {
 		*	synchronized(Enemy.this){
@@ -99,28 +120,25 @@ public class Enemy {
 		*	e1.printStackTrace();
 		}*/
 		
-		if(hp > 0 && Main.file_mappath[ycord+1][xcord] != Paths.TqtEnd && Main.file_mappath[ycord][xcord+1] != Paths.TqtEnd && check2 && check){
-			visible = true;
+		if(hp > 0 && check2 && check){
+			if(xcord < 24 && ycord < 24){
+				if(Main.file_mappath[ycord+1][xcord] != Paths.TqtEnd  && Main.file_mappath[ycord][xcord+1] != Paths.TqtEnd){
 			
-			if(System.currentTimeMillis() - timer > (-speed+128)/4){
-				timer+= (-speed+128)/4;
-				AI();
-				if(xdisp %16==0){
-					xcord = (byte) (xdisp/16);
-				}
-				if(ydisp %16==0){
-					ycord = (byte) (ydisp/16);
-				}
+					go2();
 			
-				if(Baddie == 10){
-					speed = (-hp+6)*8+16;
-				}
 			
-		    	//Thread.sleep((-speed+128)/5);
-				
+				}else if(Main.file_mappath[ycord+1][xcord] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || !check2){
+					if(alive){
+						Main.player[0].health -= hp;
+						alive = false;
+					}
+					visible = false;
+				}else{
+					visible = false;
+				}
+			}else{
+				go2();
 			}
-		}else{
-			visible = false;
 		}
 		
 			//visible = false;
@@ -135,7 +153,7 @@ public class Enemy {
 			decy=false;
 			
 			
-		if(ycord != 0 && xcord != 0){
+		if(ycord != 0 && xcord != 0 && xcord != 24  && ycord != 24){
 			if((Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TexPath) && xcord+1 != prevxcord ){
 				prevxcord = xcord;
 				prevycord = -10;
@@ -163,7 +181,8 @@ public class Enemy {
 				ydisp--;
 				decy=true;
 			}
-		}else{
+		}else if((ycord == 0 || xcord == 0) && (xcord < 23 && ycord < 23)){
+			
 			if((Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TexPath )&& xcord+1 != prevxcord){
 				prevxcord = xcord;
 				prevycord = -10;
@@ -174,6 +193,18 @@ public class Enemy {
 				prevxcord = -10;
 				ydisp++;
 				incy=true;
+			}
+		}else{
+			if(ycord == 0){
+				prevycord = ycord;
+				prevxcord = -10;
+				ydisp++;
+				incy=true;
+			}else if(xcord == 0){
+				prevxcord = xcord;
+				prevycord = -10;
+				xdisp++;
+				incx=true;
 			}
 		}
 		}else if(Main.file_mappath[ycord][xcord] != Paths.TqtEnd){

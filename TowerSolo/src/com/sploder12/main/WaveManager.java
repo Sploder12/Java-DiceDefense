@@ -12,7 +12,7 @@ public class WaveManager implements Runnable{
 	public static boolean canreturn = false;
 	public static boolean wavefin = true;
 	
-	public Enemy[] getEnemies(){
+	public static Enemy[] getEnemies(){
 		return enemies[Main.currentwave];
 	}
 	
@@ -42,7 +42,7 @@ public class WaveManager implements Runnable{
 		long waittime = 0;
 		boolean waitor = false;
 		long sendothertimer = System.currentTimeMillis();
-		while(Render.state == "GameTime"){
+		while(Render.state == "GameTime" && Main.player[0].health > 0){
 			if(waitor){
 				
 				
@@ -76,7 +76,7 @@ public class WaveManager implements Runnable{
 			}
 			
 			for(short x = 0; x < enemies[Main.currentwave].length; x++){
-				if(enemies[Main.currentwave][x] == null || !enemies[Main.currentwave][x].getCheck())continue;
+				if(enemies[Main.currentwave][x] == null || !enemies[Main.currentwave][x].getCheck() ||!enemies[Main.currentwave][x].alive)continue;
 				enemies[Main.currentwave][x].go();
 			}
 				
