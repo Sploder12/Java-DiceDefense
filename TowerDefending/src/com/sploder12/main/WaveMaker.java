@@ -61,7 +61,7 @@ public class WaveMaker {
         					}
         				
         				}else{
-        					output.append((char)80);
+        					output.append((char)32);
         				}
         				output.append('~');
         			}
@@ -83,55 +83,56 @@ public class WaveMaker {
 			boolean waitinput = false;
 			short winput = 0;
 			short total = 0;
-			
         	InputStream wavefile = new FileInputStream("waves/"+wave); 
         	while(reading){
         		Enemies redest = null;
         		int red = wavefile.read() -32;
-        		
-        		if((red < 0 || wavenumb >= 100)){
+        		if(((red < 0 && red != -31)|| wavenumb >= 100)){
         			reading = false;
-        			
-        		}else if(red == 94){
+        		}else if(red == 94 && !waitinput){	
         			waitinput = true;
-        			
         		}
         		if(reading){
+        			
+        			if(red == 92){
+    					wavenumb++;
+    					enemies = 0;
+    				}
         			if(!waitinput){
         				if(red != -31){
         					redest = Enemies.values()[red];
         				}else{
-        					wavenumb++;
-        					enemies = 0;
+        					enemies = 100;
         				}
         				if(enemies < 100){
         					
         					waves[wavenumb][enemies] = redest;
         					enemies++;
         				}else{
-        					wavenumb++;
+        					//wavenumb++;
         					enemies = 0;
-        				}
-        				
+        				}	
         			}else if(red != 94 && enemies >= 5){
-        				System.out.println(red);
+        				System.out.println(total+ "+"+red);
         				 total = (short)(total+red);		
         			}else{
-        				if(winput == 1){
-        					waittime[wavenumb][(enemies/5)-1] = total;
-        					
-        					waitinput = false;
-        					winput = 0;
+        				if(wavenumb < 100){
+        					if(winput >= 1 && enemies >= 5){
+        						waittime[wavenumb][(enemies/5)-1] = total;
+        						total = 0;
+        						waitinput = false;
+        						winput = 0;
+        					}else{
+        						winput++;
+        					}
         				}else{
-        					winput++;
+        					reading = false;
         				}
         			}
         		}
-        	
         	}
         	wavefile.close();
         }catch(Exception e){
-        	
         	e.printStackTrace();
         }
 	}

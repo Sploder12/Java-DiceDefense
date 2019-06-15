@@ -6,7 +6,6 @@ import com.sploder12.main.WaveManager;
 import sploder12.json.JSON;
 import objects.Enemies;
 public class Enemy {
-	private Thread enemie;
 	private final int[] ENEMYINDEX= {10,75,139,204};
 	private final String[] ENEMYNAME = {"D6","D4","D8","D10"};
 	private JSON json;
@@ -15,7 +14,7 @@ public class Enemy {
 	private String special = "none";
 	private byte xcord = -10, ycord = -10, prevxcord=0, prevycord=0;
 	private volatile int xdisp = 0, ydisp = 0;
-	public boolean visible = false;
+	public volatile boolean visible = false;
 	public Enemies enalme;
 	private long timer = System.currentTimeMillis();
 	private boolean check2 = true;
@@ -130,6 +129,7 @@ public class Enemy {
 				}else if(Main.file_mappath[ycord+1][xcord] == Paths.TqtEnd || Main.file_mappath[ycord][xcord+1] == Paths.TqtEnd || !check2){
 					if(alive){
 						Main.player[0].health -= hp;
+						hp = -260;
 						alive = false;
 					}
 					visible = false;
@@ -139,6 +139,8 @@ public class Enemy {
 			}else{
 				go2();
 			}
+		}else{
+			visible = false;
 		}
 		
 			//visible = false;

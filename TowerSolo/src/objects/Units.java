@@ -1,10 +1,9 @@
 package objects;
 
 import com.sploder12.main.Main;
-import com.sploder12.main.Player;
 import com.sploder12.main.WaveManager;
 
-public class Units implements Runnable{
+public class Units{
 	private Thread tower;
 	public String name;
 	private volatile int xcord;
@@ -12,16 +11,25 @@ public class Units implements Runnable{
 	private int range;
 	public long dicerolled = 0;
 	private int atkspeed;
-	public boolean attacking = false;
+	public volatile boolean attacking = false;
 	public int lazrpowr =0;
 	public Unit lazer;
 	public byte path1 = 1,path2 = 1,path3 = 1, path4 = 1, totalups = 0;
 	private float cashmult = 1;
+	public int blastr = 32;
+	public boolean splashdmg = false;
+	public volatile int mutlilazers = 1;
+	private long timer;
 	public boolean canbreakhard = false, canbreakglass = false;
 	//public volatile Projectile[] projects = new Projectile[100];
-	public volatile int enemyatking;
+	public volatile int[] enemysatking = new int[mutlilazers];
+	public boolean running = false;
 	//public int currentprojectile = 0;
 	public Units(int xcorde, int ycorde, Unit unit){
+		if(unit == Unit.LazerCannon)splashdmg = true;
+		if(unit == Unit.LazerShotgun) mutlilazers = 3;
+		int[] copy = new int[mutlilazers];
+		enemysatking = copy;
 		lazer = unit;
 		name = unit.getTowerName();
 		range = unit.getTowerRange();
@@ -29,8 +37,8 @@ public class Units implements Runnable{
 		lazrpowr = unit.getTowerDamage();
 		xcord = xcorde;
 		ycord = ycorde;
-		tower = new Thread(this);
-		tower.start();
+		timer = System.currentTimeMillis();
+		running = true;
 	}
 
 	public int getUnitX(){
@@ -43,51 +51,67 @@ public class Units implements Runnable{
 		return range;
 	}
 	
-	
-	@Override
-	public void run() {
-		while(true){
-			AI();
-		}
-	}
+
 	private boolean check;
-	private void AI(){
+	public void AI(){
 		check = false;
 		check = enemyFound();
 		//System.out.println(check);
-		if(check){
+		if(check && System.currentTimeMillis() - timer > atkspeed){
+			timer += atkspeed;
 			attack();
-			System.out.println("attacked");
-			try {
-				check = false;
-				
-				Thread.sleep(-atkspeed+256);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}else{
+			//System.out.println("");
+			check = false;
+		}else if(!check){
 			attacking = false;
 		}
 		
 	}
 	
 	private void attack(){
-		WaveManager.enemies[Main.currentwave][enemyatking].setEnemyHp(lazrpowr);
-		Player.cash = (long) Math.ceil((Player.cash + lazrpowr)*cashmult);
+		for(byte atk = 0; atk < mutlilazers; atk++){
+			
+		WaveManager.enemies[Main.currentwave][enemysatking[atk]].setEnemyHp(lazrpowr);
+			
+		if(splashdmg){
+			for(byte enemiez = 0; enemiez < WaveManager.enemies[Main.currentwave].length; enemiez++){
+				if(WaveManager.enemies[Main.currentwave][enemiez] == null || !WaveManager.enemies[Main.currentwave][enemiez].visible) continue;
+				int enemyx2 =WaveManager.enemies[Main.currentwave][enemiez].getEnemyXCord();
+				int enemyy2 = WaveManager.enemies[Main.currentwave][enemiez].getEnemyYCord();
+				int enemyx =WaveManager.enemies[Main.currentwave][enemysatking[atk]].getEnemyXCord();
+				int enemyy = WaveManager.enemies[Main.currentwave][enemysatking[atk]].getEnemyYCord();
+				if(Math.floor(Math.sqrt(Math.pow(enemyy2-enemyy, 2)+Math.pow(enemyx2-enemyx,2))) <= blastr){
+					WaveManager.enemies[Main.currentwave][enemiez].setEnemyHp(lazrpowr);
+				}
+			}
+		}
+		Main.player[0].setcash((long) Math.ceil((Main.player[0].getcash() + lazrpowr)*cashmult));	
+		}
 	}
 	
 	private boolean enemyFound(){
 		boolean foind = false;
+		
+		byte mutlilazersfond = 0;
 		for(byte curenemy = 0; curenemy < WaveManager.enemies[Main.currentwave].length; curenemy++){
-			if(WaveManager.enemies[Main.currentwave][curenemy] == null)continue;
+			
+			if(WaveManager.enemies[Main.currentwave][curenemy] == null || !WaveManager.enemies[Main.currentwave][curenemy].getVisible())continue;
 			if(WaveManager.enemies[Main.currentwave][curenemy].getEnemyHp() <= 0) continue;
 			int enemyx =WaveManager.enemies[Main.currentwave][curenemy].getEnemyXCord();
 			int enemyy = WaveManager.enemies[Main.currentwave][curenemy].getEnemyYCord();
 			//System.out.println(Math.round(Math.sqrt(Math.pow(enemyx-(xcord+16),2)+Math.pow(enemyy-(ycord+16), 2))));
 			if(Math.round(Math.sqrt(Math.pow(enemyx-(xcord+16),2)+Math.pow(enemyy-(ycord+16), 2))) <= range/2){
-				enemyatking = curenemy;
-				attacking = true;
+				enemysatking[mutlilazersfond] = curenemy;
+				//System.out.println(enemysatking[mutlilazersfond]);
+				mutlilazersfond++;
 				foind = true;
+				if(mutlilazersfond == enemysatking.length){
+					attacking = true;
+					break;
+				}
+			}
+			if(curenemy == WaveManager.enemies[Main.currentwave].length-1){
+				attacking = true;
 				break;
 			}
 		}
@@ -102,8 +126,8 @@ public class Units implements Runnable{
 			case 1:
 				switch(upgradenum){ //Upgrade to get
 				case 1:
-					if(Player.cash >= 450) { //1-0-0-0pointer 'Alpha Pointer'
-						Player.cash -= 450;  
+					if(Main.player[0].getcash() >= 450) { //1-0-0-0pointer 'Alpha Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-450);  
 						lazrpowr *= 2;
 						path1++;
 						totalups++;
@@ -113,8 +137,8 @@ public class Units implements Runnable{
 					}
 					break;
 				case 2:
-					if(Player.cash >= 1000){ //2-0-0-0pointer 'Beta Pointer'
-						Player.cash -= 1000;
+					if(Main.player[0].getcash() >= 1000){ //2-0-0-0pointer 'Beta Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-1000);
 						lazrpowr *= 2;
 						totalups++;
 						canbreakhard = true;
@@ -122,112 +146,112 @@ public class Units implements Runnable{
 					}
 					break;
 				case 3:
-					if(Player.cash >= 2000){ //3-0-0-0pointer 'Gamma Pointer'
-						Player.cash -= 2000;
+					if(Main.player[0].getcash() >= 2000){ //3-0-0-0pointer 'Gamma Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-2000);
 						lazrpowr *= 2;
 						path1++;
 						totalups++;
 					}
 					break;
 				case 4:
-					if(Player.cash >= 5000){ //4-0-0-0pointer 'Fission Pointer'
-						Player.cash -= 5000;
+					if(Main.player[0].getcash() >= 5000){ //4-0-0-0pointer 'Fission Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-5000);
 						lazrpowr*=2;
 						path1++;
 						totalups++;
 					}
 					break;
 				case 5:
-					if(Player.cash >= 450){ //0-1-0-0pointer 'High Frequency Lazer'
-						Player.cash -= 450;
+					if(Main.player[0].getcash() >= 450){ //0-1-0-0pointer 'High Frequency Lazer'
+						Main.player[0].setcash(Main.player[0].getcash()-450);
 						atkspeed /= 2;
 						path2++;
 						totalups++;
 					}
 					break;
 				case 6:
-					if(Player.cash >= 900){ //0-2-0-0pointer 'Higher Frequency Lazer'
-						Player.cash -= 900;
+					if(Main.player[0].getcash() >= 900){ //0-2-0-0pointer 'Higher Frequency Lazer'
+						Main.player[0].setcash(Main.player[0].getcash()-900);
 						atkspeed /= 2;
 						path2++;
 						totalups++;
 					}
 					break;
 				case 7:
-					if(Player.cash >= 1900){ //0-3-0-0pointer 'Highest Frequency Lazer'
-						Player.cash -= 1900;
+					if(Main.player[0].getcash() >= 1900){ //0-3-0-0pointer 'Highest Frequency Lazer'
+						Main.player[0].setcash(Main.player[0].getcash()-1900);
 						atkspeed /= 2;
 						path2++;
 						totalups++;
 					}
 					break;
 				case 8:
-					if(Player.cash >= 4000){ //0-4-0-0pointer 'Highestest Frequency Lazer'
-						Player.cash -= 4000;
+					if(Main.player[0].getcash() >= 4000){ //0-4-0-0pointer 'Highestest Frequency Lazer'
+						Main.player[0].setcash(Main.player[0].getcash()-4000);
 						atkspeed /= 2;
 						path2++;
 						totalups++;
 					}
 					break;
 				case 9:
-					if(Player.cash >= 200){ //0-0-1-0pointer 'Long Range Pointer'
-						Player.cash -= 200;
+					if(Main.player[0].getcash() >= 200){ //0-0-1-0pointer 'Long Range Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-200);
 						range *= 1.1;
 						path3++;
 						totalups++;
 					}
 					break;
 				case 10:
-					if(Player.cash >= 400){ //0-0-2-0pointer 'Longest Range Pointer'
-						Player.cash -= 400;
+					if(Main.player[0].getcash() >= 400){ //0-0-2-0pointer 'Longest Range Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-400);
 						range *= 1.2;
 						path3++;
 						totalups++;
 					}
 					break;
 				case 11:
-					if(Player.cash >= 400){ //0-0-3-0pointer 'Anti-reflectors'
-						Player.cash -= 400;
+					if(Main.player[0].getcash() >= 400){ //0-0-3-0pointer 'Anti-reflectors'
+						Main.player[0].setcash(Main.player[0].getcash()-400);
 						canbreakglass = true;
 						path3++;
 						totalups++;
 					}
 					break;
 				case 12:
-					if(Player.cash >= 800){ //0-0-4-0pointer 'MEGA POINTER'
-						Player.cash -= 800;
+					if(Main.player[0].getcash() >= 800){ //0-0-4-0pointer 'MEGA POINTER'
+						Main.player[0].setcash(Main.player[0].getcash()-800);
 						range *= 1.5;
 						path3++;
 						totalups++;
 					}
 					break;
 				case 13:
-					if(Player.cash >= 400){ //0-0-0-1pointer 'Money Pointer'
-						Player.cash -= 400;
+					if(Main.player[0].getcash() >= 400){ //0-0-0-1pointer 'Money Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-400);
 						cashmult += 0.5f;
 						path4++;
 						totalups++;
 					}
 					break;
 				case 14:
-					if(Player.cash >= 800){ //0-0-0-2pointer 'Silver Pointer'
-						Player.cash -= 800;
+					if(Main.player[0].getcash() >= 800){ //0-0-0-2pointer 'Silver Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-800);
 						cashmult += 0.5f;
 						path4++;
 						totalups++;
 					}
 					break;
 				case 15:
-					if(Player.cash >= 1600){ //0-0-0-3pointer 'Gold Pointer'
-						Player.cash -= 1600;
+					if(Main.player[0].getcash() >= 1600){ //0-0-0-3pointer 'Gold Pointer'
+						Main.player[0].setcash(Main.player[0].getcash()-1600);
 						cashmult += 4f;
 						path4++;
 						totalups++;
 					}
 					break;
 				case 16:
-					if(Player.cash >= 3200){ //0-0-0-4pointer 'Big Bucks'
-						Player.cash -= 3200;
+					if(Main.player[0].getcash() >= 3200){ //0-0-0-4pointer 'Big Bucks'
+						Main.player[0].setcash(Main.player[0].getcash()-3200);
 						cashmult *= 10;
 						path4++;
 						totalups++;

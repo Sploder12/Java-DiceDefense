@@ -1,7 +1,7 @@
 package objects;
 
 public enum Unit {
-LazerPointer(128,2,64,500,"Lazer Pointer"), LazerRing(256,4,256,500,"LFG");
+LazerPointer(192,1,64,500,"Lazer Pointer"), LazerShotgun(112,1,128,500,"Lazer Shotgun"), LazerCannon(144,1,256,500,"Lazer Cannon");
 
 private String dispname;
 private int range;

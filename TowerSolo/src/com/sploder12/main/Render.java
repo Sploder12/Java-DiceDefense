@@ -25,8 +25,8 @@ public class Render extends Canvas implements Runnable{
 	public boolean rendering = false;
 	public static Graphics2D g;
 	public static Font newFont, currentFont;
-	public static BufferedImage tileset,enemies;
-	public Image enemiescale,tilescale;
+	public static BufferedImage tileset,enemies, towers;
+	public Image enemiescale,tilescale, towerscale;
 	public static byte fpslimit = 47, wantedfps = 45;
 	public volatile static String state = "Menu";
 	public static int[] fpsgraph = new int[30];
@@ -44,11 +44,13 @@ public class Render extends Canvas implements Runnable{
 		try{
 		tileset = ImageIO.read(new File("resources\\tileset.png")); //loads tilesets
 		enemies = ImageIO.read(new File("resources\\enemies.png"));
+		towers = ImageIO.read(new File("resources\\towers.png"));
 		enemiescale = enemies.getScaledInstance(Math.round(160*xScale), -1, Image.SCALE_SMOOTH);
 		tilescale = tileset.getScaledInstance(Math.round(320*xScale), -1, Image.SCALE_SMOOTH);
+		towerscale = towers.getScaledInstance(Math.round(45*xScale), -1, Image.SCALE_SMOOTH);
 		
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		new Window(WIDTH, HEIGHT, "Now with more dice dicing!", this);
 	}
@@ -76,8 +78,14 @@ public class Render extends Canvas implements Runnable{
 	
 	protected void drawEnemy(Graphics g, Enemies t, int x, int y){
         int mx = t.ordinal()%10;
-        int my = t.ordinal()/10;	//draws the tiles in the location
+        int my = t.ordinal()/10;	//draws the enemies in the location
         g.drawImage(enemiescale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+tW)*xScale),(int)Math.round((y+tH)*yScale),(int)Math.round((mx*tW)*xScale), (int)Math.round((my*tH)*yScale),  (int)Math.round((mx*tW+tW)*xScale), (int)Math.round((my*tH+tH)*yScale), this);
+	}
+	
+	protected void drawTower(Graphics g, Unit t, int x, int y){
+		int mx = t.ordinal()%10;
+        int my = t.ordinal()/10;
+        g.drawImage(towerscale, (int)Math.round(x*xScale), (int)Math.round(y*yScale), (int)Math.round((x+15)*xScale),(int)Math.round((y+15)*yScale),(int)Math.round((mx*15)*xScale), (int)Math.round((my*15)*yScale),  (int)Math.round((mx*15+15)*xScale), (int)Math.round((my*15+15)*yScale), this);
 	}
 	
 	public static int tempframes;
@@ -160,9 +168,9 @@ public class Render extends Canvas implements Runnable{
 		  try{
 			  String rendstate = "screens." +state;
 			  Class<?> cls = Class.forName(rendstate);	//gets the screen to render from com.sploder.main.screens
-			  cls.newInstance();
+			  cls.getDeclaredConstructor().newInstance();
 		  } catch(Exception e){
-			  System.out.println(e);
+			  e.printStackTrace();
 		  }
 		  if(state == "GameTime" && WaveManager.canreturn){
 			  Enemy[] enemingus = waving.getEnemies(); 
@@ -174,6 +182,14 @@ public class Render extends Canvas implements Runnable{
 					  } 
 				 }
 			 }
+			  for(int showtowers = 0; showtowers < Player.towers.length; showtowers++){
+				  if(Player.towers[showtowers] != null){
+					  drawTower(g,Player.towers[showtowers].lazer,Player.towers[showtowers].getUnitX()+10,Player.towers[showtowers].getUnitY()+10);
+				  }
+			  }
+			  if(Main.player[0].getplacing()){
+				  drawTower(g,Main.player[0].getselectunit(),Math.round((Mouse.mx-15)/Render.xScale),Math.round((Mouse.my-15)/Render.yScale));
+			  }
 		  }
 		  
 

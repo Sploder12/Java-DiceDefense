@@ -59,7 +59,7 @@ public class WaveManager implements Runnable{
 					}
 				}
 			}else if(sending && System.currentTimeMillis()- sendtimer > 25){
-				
+				//System.out.println(curenemysent);
 				sendtimer+=25;
 				if(curenemysent < 99 && Main.waves[Main.currentwave][curenemysent] == Enemies.t59 ){
 					curenemysent++;
@@ -68,9 +68,19 @@ public class WaveManager implements Runnable{
 					sendothertimer = System.currentTimeMillis();
 					waitor = true;
 				}
-				if(curenemysent >= 100){
-					Main.currentwave++;
-					sending = false;
+				if(curenemysent >= 99){
+					boolean end = true;
+					for(int check = 0; check < Main.waves[Main.currentwave].length; check++){
+						if(enemies[Main.currentwave][check] == null)continue;
+						if(enemies[Main.currentwave][check].getEnemyHp() > 0){
+							end = false;
+						} 
+					}
+					if(end){
+						curenemysent = 0;
+						Main.currentwave++;
+						sending = false;
+					}
 				}
 				
 			}

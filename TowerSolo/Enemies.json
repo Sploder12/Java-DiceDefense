@@ -6,7 +6,7 @@
 ,
   "D4":{
     "hp":4,
-    "speed":64,
+    "speed":100,
     "special":"none"
   },
   "D8":{

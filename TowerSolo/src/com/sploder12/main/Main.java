@@ -7,6 +7,8 @@ import java.io.InputStream;
 
 
 
+import java.util.Arrays;
+
 import objects.*;
 import sploder12.json.JSON;
 
@@ -76,14 +78,14 @@ public class Main implements Runnable{
             				}
         				}
         			}catch(ArrayIndexOutOfBoundsException r){
-        				System.out.println(r);
+        				r.printStackTrace();;
         			}
         		}	
         	}
         	mapfile.close();
         }catch(Exception e){
         	mapname = "template.wd";
-        	System.out.println(e);
+        	e.printStackTrace();
         }
 		wavename = wavename + ".wv";
 		try{
@@ -97,35 +99,50 @@ public class Main implements Runnable{
         	while(reading){
         		Enemies redest = null;
         		int red = wavefile.read() -32;
-        		if((red < 0 || wavenumb >= 100)){
+        		if(((red < 0 && red != -31)|| wavenumb >= 100)){
         			reading = false;
-        		}else if(red == 94){
+        		}else if(red == 94 && !waitinput){	
         			waitinput = true;
         		}
         		if(reading){
+        			
+        			if(red == 92){
+    					wavenumb++;
+    					enemies = 0;
+    				}
         			if(!waitinput){
         				if(red != -31){
         					redest = Enemies.values()[red];
         				}else{
-        					wavenumb++;
-        					enemies = 0;
+        					enemies = 100;
         				}
         				if(enemies < 100){
+        					
         					waves[wavenumb][enemies] = redest;
         					enemies++;
         				}else{
-        					wavenumb++;
+        					//wavenumb++;
         					enemies = 0;
         				}	
         			}else if(red != 94 && enemies >= 5){
         				 total = (short)(total+red);		
         			}else{
-        				if(winput == 1){
+        				if(wavenumb < 100){
+        				if(winput >= 1 && enemies >= 5){
         					waittime[wavenumb][(enemies/5)-1] = total;
+        					total = 0;
+        					waitinput = false;
+        					winput = 0;
+        				}else if(enemies < 5 && winput >= 1){
+        					waittime[wavenumb][0] = total;
+        					total = 0;
         					waitinput = false;
         					winput = 0;
         				}else{
         					winput++;
+        				}
+        				}else{
+        					reading = false;
         				}
         			}
         		}
@@ -135,7 +152,9 @@ public class Main implements Runnable{
         	e.printStackTrace();
         }
 		preparepath();
-		
+		//for(int x = 0; x < waves.length; x++){
+			//System.out.println(Arrays.toString(waves[x]));
+		//}
 	}
 	
 	private void preparepath(){
@@ -159,7 +178,13 @@ public class Main implements Runnable{
 				loadmap(LOADNAME[Render.mapselect],"test",true);
 				Main.reloadmap = false;
 			}
-			
+			if(Render.state == "GameTime") {
+				for(int units = 0; units < Player.towers.length; units++) {
+					if(Player.towers[units] != null && Player.towers[units].running) {
+						Player.towers[units].AI();
+					}
+				}
+			}
 			try {
 		    	if(Render.fpslimit > 0 && Render.fpslimit < 254){
 		    		Thread.sleep(1000/(Render.fpslimit));			//frame limiter
