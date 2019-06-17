@@ -36,7 +36,11 @@ public class GameTime {
 			int x = Player.towers[drawRange].getUnitX()-((Player.towers[drawRange].getUnitRange()/2));
 			int y = Player.towers[drawRange].getUnitY()-((Player.towers[drawRange].getUnitRange()/2));
 			int r = Player.towers[drawRange].getUnitRange();
-			Render.g.drawOval(Math.round((x+16)*Render.xScale), Math.round((y+16)*Render.yScale), Math.round(r*Render.xScale),Math.round(r*Render.yScale));
+			System.out.println(Main.player[0].selectedtower);
+			if(Main.player[0].selectedtower == drawRange){
+				
+				Render.g.drawOval(Math.round((x+16)*Render.xScale), Math.round((y+16)*Render.yScale), Math.round(r*Render.xScale),Math.round(r*Render.yScale));
+			}
 			//System.out.println(Player.towers[drawRange].attacking);
 			
 			if(Player.towers[drawRange].attacking){
@@ -78,8 +82,10 @@ public class GameTime {
 		
 		for(int upgrade = 0; upgrade < Main.player[0].towers.length; upgrade++) {
 			if(Main.player[0].towers[upgrade] == null)continue;
-			if(Mouse.clicked && Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(Main.player[0].towers[upgrade].getUnitX()), Math.round(Main.player[0].towers[upgrade].getUnitY()), Math.round(16*Render.xScale), Math.round(16*Render.yScale))) {
+			Render.g.drawRect(Math.round(Main.player[0].towers[upgrade].getUnitX()), Math.round(Main.player[0].towers[upgrade].getUnitY()), Math.round(16*Render.xScale), Math.round(16*Render.yScale));
+			if(Mouse.clicked && Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(Main.player[0].towers[upgrade].getUnitX()), Math.round(Main.player[0].towers[upgrade].getUnitY()), Math.round(320*Render.xScale), Math.round(320*Render.yScale))) {
 				Main.player[0].selectedtower = upgrade;
+				System.out.println(upgrade);
 			}
 		}
 	}

@@ -189,6 +189,10 @@ public class Render extends Canvas implements Runnable{
 			  }
 			  if(Main.player[0].getplacing()){
 				  drawTower(g,Main.player[0].getselectunit(),Math.round((Mouse.mx-15)/Render.xScale),Math.round((Mouse.my-15)/Render.yScale));
+				  int x = Mouse.mx-(Main.player[0].getselectunit().getTowerRange()/2);
+				  int y = Mouse.my-(Main.player[0].getselectunit().getTowerRange()/2);
+				  int r = Main.player[0].getselectunit().getTowerRange();
+				  Render.g.drawOval(Math.round(x-64), Math.round(y-64), Math.round(r*Render.xScale),Math.round(r*Render.yScale));
 			  }
 		  }
 		  
