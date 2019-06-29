@@ -19,10 +19,19 @@ public class Enemy {
 	private long timer = System.currentTimeMillis();
 	private boolean check2 = true;
 	private boolean check = false;
+	public volatile boolean hard = false, camo = false;
 	
 	public void setCheck(boolean set){
 		timer = System.currentTimeMillis();
 		check = set;
+	}
+	
+	public boolean gethard() {
+		return hard;
+	}
+	
+	public boolean getcamo() {
+		return camo;
 	}
 	
 	public boolean getCheck(){
@@ -78,6 +87,7 @@ public class Enemy {
 		this.ydisp = ystart*16;
 		this.xcord = xstart;
 		this.ycord = ystart;
+		
 		this.Baddie = ENEMYINDEX[enemy.ordinal()];
 		this.name = ENEMYNAME[enemy.ordinal()];
 		if(enemy.ordinal() == 0){
@@ -86,7 +96,8 @@ public class Enemy {
 		this.hp = json.getIntValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"hp",Baddie));
 		this.speed =json.getIntValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"speed",Baddie));
 		this.special = json.getValueOfDict(Main.Enemiefile, json.locateStringEnd(Main.Enemiefile,"special",Baddie));
-		
+		if(special.equalsIgnoreCase("heavy")) hard = true;
+		if(special.equalsIgnoreCase("clear")) camo = true;
 	}
 	public boolean alive = true;
 	

@@ -14,7 +14,7 @@ public class Units{
 	public volatile boolean attacking = false;
 	public int lazrpowr =0;
 	public Unit lazer;
-	public byte path1 = 1,path2 = 1,path3 = 1, path4 = 1, totalups = 0;
+	public volatile byte path1 = 1,path2 = 1,path3 = 1, path4 = 1, totalups = 0;
 	private float cashmult = 1;
 	public int blastr = 32;
 	public boolean splashdmg = false;
@@ -26,7 +26,10 @@ public class Units{
 	public boolean running = false;
 	//public int currentprojectile = 0;
 	public Units(int xcorde, int ycorde, Unit unit){
-		if(unit == Unit.LazerCannon)splashdmg = true;
+		if(unit == Unit.LazerCannon) {
+			splashdmg = true;
+			canbreakhard = true;
+		}
 		if(unit == Unit.LazerShotgun) mutlilazers = 3;
 		int[] copy = new int[mutlilazers];
 		enemysatking = copy;
@@ -70,22 +73,21 @@ public class Units{
 	
 	private void attack(){
 		for(byte atk = 0; atk < mutlilazers; atk++){
-			
-		WaveManager.enemies[Main.currentwave][enemysatking[atk]].setEnemyHp(lazrpowr);
-			
-		if(splashdmg){
-			for(byte enemiez = 0; enemiez < WaveManager.enemies[Main.currentwave].length; enemiez++){
-				if(WaveManager.enemies[Main.currentwave][enemiez] == null || !WaveManager.enemies[Main.currentwave][enemiez].visible) continue;
-				int enemyx2 =WaveManager.enemies[Main.currentwave][enemiez].getEnemyXCord();
-				int enemyy2 = WaveManager.enemies[Main.currentwave][enemiez].getEnemyYCord();
-				int enemyx =WaveManager.enemies[Main.currentwave][enemysatking[atk]].getEnemyXCord();
-				int enemyy = WaveManager.enemies[Main.currentwave][enemysatking[atk]].getEnemyYCord();
-				if(Math.floor(Math.sqrt(Math.pow(enemyy2-enemyy, 2)+Math.pow(enemyx2-enemyx,2))) <= blastr){
-					WaveManager.enemies[Main.currentwave][enemiez].setEnemyHp(lazrpowr);
+			WaveManager.enemies[Main.currentwave][enemysatking[atk]].setEnemyHp(lazrpowr);
+			if(splashdmg){
+				for(byte enemiez = 0; enemiez < WaveManager.enemies[Main.currentwave].length; enemiez++){
+					if(WaveManager.enemies[Main.currentwave][enemiez] == null || !WaveManager.enemies[Main.currentwave][enemiez].visible) continue;
+					int enemyx2 =WaveManager.enemies[Main.currentwave][enemiez].getEnemyXCord();
+					int enemyy2 = WaveManager.enemies[Main.currentwave][enemiez].getEnemyYCord();
+					int enemyx =WaveManager.enemies[Main.currentwave][enemysatking[atk]].getEnemyXCord();
+					int enemyy = WaveManager.enemies[Main.currentwave][enemysatking[atk]].getEnemyYCord();
+					if(Math.floor(Math.sqrt(Math.pow(enemyy2-enemyy, 2)+Math.pow(enemyx2-enemyx,2))) <= blastr){
+						WaveManager.enemies[Main.currentwave][enemiez].setEnemyHp(lazrpowr);
+					}
 				}
 			}
-		}
-		Main.player[0].setcash((long) Math.ceil((Main.player[0].getcash() + lazrpowr)*cashmult));	
+			System.out.println((long) Math.ceil(Main.player[0].getcash() + (lazrpowr*cashmult)));
+			Main.player[0].setcash((long) Math.ceil(Main.player[0].getcash() + (lazrpowr*cashmult)));	
 		}
 	}
 	
@@ -94,9 +96,11 @@ public class Units{
 		
 		byte mutlilazersfond = 0;
 		for(byte curenemy = 0; curenemy < WaveManager.enemies[Main.currentwave].length; curenemy++){
-			
 			if(WaveManager.enemies[Main.currentwave][curenemy] == null || !WaveManager.enemies[Main.currentwave][curenemy].getVisible())continue;
 			if(WaveManager.enemies[Main.currentwave][curenemy].getEnemyHp() <= 0) continue;
+			if(WaveManager.enemies[Main.currentwave][curenemy].getcamo() || WaveManager.enemies[Main.currentwave][curenemy].gethard()) {
+				if(canbreakhard != WaveManager.enemies[Main.currentwave][curenemy].gethard() || canbreakglass != WaveManager.enemies[Main.currentwave][curenemy].getcamo())continue;
+			}
 			int enemyx =WaveManager.enemies[Main.currentwave][curenemy].getEnemyXCord();
 			int enemyy = WaveManager.enemies[Main.currentwave][curenemy].getEnemyYCord();
 			//System.out.println(Math.round(Math.sqrt(Math.pow(enemyx-(xcord+16),2)+Math.pow(enemyy-(ycord+16), 2))));
@@ -118,22 +122,19 @@ public class Units{
 		return foind;
 	}
 	
-	public void upgrades(byte upgradenum){
+	public void upgrades(int i){
 		String unit = lazer.name(); 
 		int lazerindx = Unit.valueOf(unit).ordinal();
 		if(totalups < 8){
 			switch(lazerindx){ //Unit index
-			case 1:
-				switch(upgradenum){ //Upgrade to get
+			case 0:
+				switch(i){ //Upgrade to get
 				case 1:
 					if(Main.player[0].getcash() >= 450) { //1-0-0-0pointer 'Alpha Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-450);  
 						lazrpowr *= 2;
 						path1++;
 						totalups++;
-						System.out.println("bhouagt");
-					}else{
-						System.out.println("Lol ur poor");
 					}
 					break;
 				case 2:
@@ -236,7 +237,7 @@ public class Units{
 				case 14:
 					if(Main.player[0].getcash() >= 800){ //0-0-0-2pointer 'Silver Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-800);
-						cashmult += 0.5f;
+						cashmult += 1f;
 						path4++;
 						totalups++;
 					}
@@ -244,7 +245,7 @@ public class Units{
 				case 15:
 					if(Main.player[0].getcash() >= 1600){ //0-0-0-3pointer 'Gold Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-1600);
-						cashmult += 4f;
+						cashmult += 2f;
 						path4++;
 						totalups++;
 					}
@@ -260,8 +261,8 @@ public class Units{
 				}
 		
 				break;
-			case 2:
-				switch(upgradenum){
+			case 1:
+				switch(i){
 				case 1:
 				
 					break;
@@ -269,8 +270,6 @@ public class Units{
 				break;
 			
 			}
-		}else{
-			System.out.println("Too Many Upgrades RIP");
 		}
 	}
 }

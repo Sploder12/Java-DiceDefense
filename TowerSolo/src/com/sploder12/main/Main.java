@@ -17,7 +17,7 @@ public class Main implements Runnable{
 	public boolean logic = false;
 	public static Thread main;
 	public static Player[] player = new Player[1];
-	public static String Enemiefile = "";
+	public static String Enemiefile = "", upgradefile = "";
 	public static byte currentwave = 0;
 	public static Enemies[][] waves = Enemies.arrayOfDefault(100);
 	public static short[][] waittime= new short[100][20];
@@ -45,7 +45,7 @@ public class Main implements Runnable{
 		
 		json = new JSON();
 		Enemiefile = json.convertToString("Enemies.json");
-		
+		upgradefile = json.convertToString("Upgrades.json");
 		
 		
 		start();
@@ -78,7 +78,7 @@ public class Main implements Runnable{
             				}
         				}
         			}catch(ArrayIndexOutOfBoundsException r){
-        				r.printStackTrace();;
+        				r.printStackTrace();
         			}
         		}	
         	}
@@ -99,7 +99,7 @@ public class Main implements Runnable{
         	while(reading){
         		Enemies redest = null;
         		int red = wavefile.read() -32;
-        		if(((red < 0 && red != -31)|| wavenumb >= 100)){
+        		if((red < 0 && red != -31)|| wavenumb >= 100){
         			reading = false;
         		}else if(red == 94 && !waitinput){	
         			waitinput = true;

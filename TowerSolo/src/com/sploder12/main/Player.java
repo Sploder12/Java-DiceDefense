@@ -4,7 +4,7 @@ import objects.*;
 
 public class Player{
 	public String name = "";
-	public long cash = 1000000;
+	public volatile long cash = 1000000;
 	public int health = 1000;
 	public volatile boolean placing = false;
 	public volatile Unit selectedunit = Unit.LazerPointer;
@@ -14,6 +14,10 @@ public class Player{
 	public volatile static Units[] towers= new Units[100];
 	public Player(){
 		//towers[0] = new Units(128,128,Unit.DiceRoller);
+	}
+	
+	public int getselectedtower() {
+		return selectedtower;
 	}
 	
 	public Unit getselectunit() {
