@@ -14,7 +14,8 @@ public class Units{
 	public volatile boolean attacking = false;
 	public int lazrpowr =0;
 	public Unit lazer;
-	public volatile byte path1 = 1,path2 = 1,path3 = 1, path4 = 1, totalups = 0;
+	public volatile byte[] paths = {1,1,1,1}; 
+	public volatile byte totalups = 0;
 	private float cashmult = 1;
 	public int blastr = 32;
 	public boolean splashdmg = false;
@@ -86,7 +87,7 @@ public class Units{
 					}
 				}
 			}
-			System.out.println((long) Math.ceil(Main.player[0].getcash() + (lazrpowr*cashmult)));
+			//System.out.println((long) Math.ceil(Main.player[0].getcash() + (lazrpowr*cashmult)));
 			Main.player[0].setcash((long) Math.ceil(Main.player[0].getcash() + (lazrpowr*cashmult)));	
 		}
 	}
@@ -133,7 +134,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 450) { //1-0-0-0pointer 'Alpha Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-450);  
 						lazrpowr *= 2;
-						path1++;
+						paths[0]++;
 						totalups++;
 					}
 					break;
@@ -143,14 +144,14 @@ public class Units{
 						lazrpowr *= 2;
 						totalups++;
 						canbreakhard = true;
-						path1++;
+						paths[0]++;
 					}
 					break;
 				case 3:
 					if(Main.player[0].getcash() >= 2000){ //3-0-0-0pointer 'Gamma Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-2000);
 						lazrpowr *= 2;
-						path1++;
+						paths[0]++;
 						totalups++;
 					}
 					break;
@@ -158,7 +159,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 5000){ //4-0-0-0pointer 'Fission Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-5000);
 						lazrpowr*=2;
-						path1++;
+						paths[0]++;
 						totalups++;
 					}
 					break;
@@ -166,7 +167,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 450){ //0-1-0-0pointer 'High Frequency Lazer'
 						Main.player[0].setcash(Main.player[0].getcash()-450);
 						atkspeed /= 2;
-						path2++;
+						paths[1]++;
 						totalups++;
 					}
 					break;
@@ -174,7 +175,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 900){ //0-2-0-0pointer 'Higher Frequency Lazer'
 						Main.player[0].setcash(Main.player[0].getcash()-900);
 						atkspeed /= 2;
-						path2++;
+						paths[1]++;
 						totalups++;
 					}
 					break;
@@ -182,7 +183,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 1900){ //0-3-0-0pointer 'Highest Frequency Lazer'
 						Main.player[0].setcash(Main.player[0].getcash()-1900);
 						atkspeed /= 2;
-						path2++;
+						paths[1]++;
 						totalups++;
 					}
 					break;
@@ -190,7 +191,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 4000){ //0-4-0-0pointer 'Highestest Frequency Lazer'
 						Main.player[0].setcash(Main.player[0].getcash()-4000);
 						atkspeed /= 2;
-						path2++;
+						paths[1]++;
 						totalups++;
 					}
 					break;
@@ -198,7 +199,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 200){ //0-0-1-0pointer 'Long Range Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-200);
 						range *= 1.1;
-						path3++;
+						paths[2]++;
 						totalups++;
 					}
 					break;
@@ -206,7 +207,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 400){ //0-0-2-0pointer 'Longest Range Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-400);
 						range *= 1.2;
-						path3++;
+						paths[2]++;
 						totalups++;
 					}
 					break;
@@ -214,7 +215,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 400){ //0-0-3-0pointer 'Anti-reflectors'
 						Main.player[0].setcash(Main.player[0].getcash()-400);
 						canbreakglass = true;
-						path3++;
+						paths[2]++;
 						totalups++;
 					}
 					break;
@@ -222,7 +223,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 800){ //0-0-4-0pointer 'MEGA POINTER'
 						Main.player[0].setcash(Main.player[0].getcash()-800);
 						range *= 1.5;
-						path3++;
+						paths[2]++;
 						totalups++;
 					}
 					break;
@@ -230,7 +231,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 400){ //0-0-0-1pointer 'Money Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-400);
 						cashmult += 0.5f;
-						path4++;
+						paths[3]++;
 						totalups++;
 					}
 					break;
@@ -238,7 +239,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 800){ //0-0-0-2pointer 'Silver Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-800);
 						cashmult += 1f;
-						path4++;
+						paths[3]++;
 						totalups++;
 					}
 					break;
@@ -246,7 +247,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 1600){ //0-0-0-3pointer 'Gold Pointer'
 						Main.player[0].setcash(Main.player[0].getcash()-1600);
 						cashmult += 2f;
-						path4++;
+						paths[3]++;
 						totalups++;
 					}
 					break;
@@ -254,7 +255,7 @@ public class Units{
 					if(Main.player[0].getcash() >= 3200){ //0-0-0-4pointer 'Big Bucks'
 						Main.player[0].setcash(Main.player[0].getcash()-3200);
 						cashmult *= 10;
-						path4++;
+						paths[3]++;
 						totalups++;
 					}
 					break;

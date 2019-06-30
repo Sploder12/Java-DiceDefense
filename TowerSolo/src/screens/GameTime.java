@@ -22,7 +22,7 @@ public class GameTime {
 		Render.g.setColor(Color.white);
 		Render.g.drawString("$"+Main.player[0].cash,Math.round(390*Render.xScale),Math.round(15*Render.yScale));
 		Render.g.drawString("Life:"+Main.player[0].health,Math.round(390*Render.xScale),Math.round(30*Render.yScale));
-		Render.g.drawRect(Math.round(450*Render.xScale), Math.round(390*Render.yScale), Math.round(40*Render.xScale), Math.round(40*Render.yScale));
+		Render.g.drawRect(Math.round(450*Render.xScale), Math.round(390*Render.yScale), Math.round(40*Render.xScale), Math.round(30*Render.yScale));
 		Render.g.drawString(">", Math.round(475*Render.xScale), Math.round(415*Render.yScale));
 		Render.g.drawString((Main.currentwave+1)+"/"+Main.waves.length,Math.round(465*Render.xScale), Math.round(15 * Render.yScale));
 		Enemy[] enemies = WaveManager.getEnemies();
@@ -57,7 +57,6 @@ public class GameTime {
 					Render.g.setColor(Color.white);
 				}
 			}
-		
 		}
 		if(Main.player[0].selectedtower != -1) {
 			//Render.g.drawString("test", Math.round(475*Render.xScale), Math.round(100*Render.yScale));
@@ -76,73 +75,34 @@ public class GameTime {
 				Render.g.fillRect(Math.round(384*Render.xScale), Math.round(184*Render.yScale), Math.round(108*Render.xScale), Math.round(200*Render.yScale));
 				Render.g.setColor(Color.white);
 			}
-			if(Player.towers[Main.player[0].selectedtower].path1 <= 4) {
-				Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 0.65F)); 
-				Render.g.setFont(Render.newFont);
-				upgrade = ""+Player.towers[Main.player[0].selectedtower].path1+"000";
-				Render.g.drawString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade,towuer),15), Math.round(387*Render.xScale), Math.round(200*Render.yScale));
-				drawSpecialString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"d",towuer),50),10,395,210);
-				Render.g.drawString("$"+json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)), Math.round(387*Render.xScale), Math.round(280*Render.yScale));
-				if(Player.towers[Main.player[0].selectedtower].totalups < 8 && json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)) <= Main.player[0].cash) {
-					Render.g.setColor(alphaGreen);
-					Render.g.fillRect(Math.round(384*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
+			for(byte up = 0; up < Player.towers[Main.player[0].selectedtower].paths.length;up++) {
+				int xcng = (up == 1 || up == 3)?1:0;
+				int ycng = (up == 2 || up == 3)?1:0;
+				if(Player.towers[Main.player[0].selectedtower].paths[up] <= 4) {
+					upgrade = "";
+					int remain = Player.towers[Main.player[0].selectedtower].paths.length - (up+1);
+					Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 0.65F)); 
+					Render.g.setFont(Render.newFont);
+					for(byte grade = 3; grade > remain; grade--) {
+						upgrade = upgrade+"0";
+					}
+					upgrade = upgrade+Player.towers[Main.player[0].selectedtower].paths[up];
+					for(byte rem = 0; rem < remain; rem++) {
+						upgrade = upgrade+"0";
+					}
+					Render.g.drawString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade,towuer),15), Math.round((387+(56*xcng))*Render.xScale), Math.round((200+(100*ycng))*Render.yScale));
+					drawSpecialString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"d",towuer),61),10,395+(50*xcng),210+(100*ycng));
+					Render.g.drawString("$"+json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)), Math.round((387+(56*xcng))*Render.xScale), Math.round((280+(100*ycng))*Render.yScale));
+					if(Player.towers[Main.player[0].selectedtower].totalups < 8 &&json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)) <= Main.player[0].cash) {
+						Render.g.setColor(alphaGreen);
+						Render.g.fillRect(Math.round((384+(56*xcng))*Render.xScale), Math.round((184+(100*ycng))*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
+						Render.g.setColor(Color.white);
+					}	
+				}else {
+					Render.g.setColor(Color.green);
+					Render.g.fillRect(Math.round((384+(56*xcng))*Render.xScale), Math.round((184+(100*ycng))*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
 					Render.g.setColor(Color.white);
 				}
-			} else {
-				Render.g.setColor(Color.green);
-				Render.g.fillRect(Math.round(384*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-				Render.g.setColor(Color.white);
-			}
-			if(Player.towers[Main.player[0].selectedtower].path2 <= 4) {
-				Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 0.65F)); 
-				Render.g.setFont(Render.newFont);
-				upgrade = "0"+Player.towers[Main.player[0].selectedtower].path2+"00";
-				Render.g.drawString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade,towuer),15), Math.round(443*Render.xScale), Math.round(200*Render.yScale));
-				drawSpecialString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"d",towuer),50),10,445,210);
-				Render.g.drawString("$"+json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)), Math.round(443*Render.xScale), Math.round(280*Render.yScale));
-				if(Player.towers[Main.player[0].selectedtower].totalups < 8 &&json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)) <= Main.player[0].cash) {
-					Render.g.setColor(alphaGreen);
-					Render.g.fillRect(Math.round(440*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-					Render.g.setColor(Color.white);
-				}
-			}else {
-				Render.g.setColor(Color.green);
-				Render.g.fillRect(Math.round(440*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-				Render.g.setColor(Color.white);
-			}
-			if(Player.towers[Main.player[0].selectedtower].path3 <= 4) {
-				Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 0.65F)); 
-				Render.g.setFont(Render.newFont);
-				upgrade = "00"+Player.towers[Main.player[0].selectedtower].path3+"0";
-				Render.g.drawString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade,towuer),15), Math.round(387*Render.xScale), Math.round(300*Render.yScale));
-				drawSpecialString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"d",towuer),50),10,395,310);
-				Render.g.drawString("$"+json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)), Math.round(387*Render.xScale), Math.round(380*Render.yScale));
-				if(Player.towers[Main.player[0].selectedtower].totalups < 8 &&json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)) <= Main.player[0].cash) {
-					Render.g.setColor(alphaGreen);
-					Render.g.fillRect(Math.round(384*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-					Render.g.setColor(Color.white);
-				}
-			}else {
-				Render.g.setColor(Color.green);
-				Render.g.fillRect(Math.round(384*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-				Render.g.setColor(Color.white);
-			}
-			if(Player.towers[Main.player[0].selectedtower].path4 <= 4) {
-				Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 0.65F)); 
-				Render.g.setFont(Render.newFont);
-				upgrade = "000"+Player.towers[Main.player[0].selectedtower].path4;
-				Render.g.drawString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade,towuer),15), Math.round(443*Render.xScale), Math.round(300*Render.yScale));
-				drawSpecialString(json.getValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"d",towuer),75),10,445,310);
-				Render.g.drawString("$"+json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)), Math.round(443*Render.xScale), Math.round(380*Render.yScale));
-				if(Player.towers[Main.player[0].selectedtower].totalups < 8 &&json.getIntValueOfDict(Main.upgradefile, json.locateStringEnd(Main.upgradefile, upgrade+"p",towuer)) <= Main.player[0].cash) {
-					Render.g.setColor(alphaGreen);
-					Render.g.fillRect(Math.round(440*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-					Render.g.setColor(Color.white);
-				}
-			}else {
-				Render.g.setColor(Color.green);
-				Render.g.fillRect(Math.round(440*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale));
-				Render.g.setColor(Color.white);
 			}
 		}
 	}
@@ -185,23 +145,23 @@ public class GameTime {
 			if(Main.player[0].towers[upgrade] == null)continue;
 			//int r = Main.player[0].towers[upgrade].getUnitRange();
 			//Render.g.drawRect(Math.round(Main.player[0].towers[upgrade].getUnitX()*2+18), Math.round(Main.player[0].towers[upgrade].getUnitY()*2+18), Math.round(16*Render.xScale), Math.round(16*Render.yScale));
-			if(Mouse.clicked && Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(Main.player[0].towers[upgrade].getUnitX()*2+18), Math.round(Main.player[0].towers[upgrade].getUnitY()*2+18), Math.round(16*Render.xScale), Math.round(16*Render.yScale))) {
+			if(Mouse.clicked && Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(Main.player[0].towers[upgrade].getUnitX()*Render.xScale+18), Math.round(Main.player[0].towers[upgrade].getUnitY()*Render.yScale+18), Math.round(16*Render.xScale), Math.round(16*Render.yScale))) {
 				Main.player[0].selectedtower = upgrade;
 			}
 		}
 		if(Main.player[0].selectedtower != -1) {
-			if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].path1 <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(384*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
+			if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].paths[0] <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(384*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
 				Mouse.clicked = false;
-				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].path1);
-			} else if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].path2 <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(440*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
+				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].paths[0]);
+			} else if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].paths[1] <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(440*Render.xScale), Math.round(184*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
 				Mouse.clicked = false;
-				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].path2+4);
-			} else if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].path3 <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(384*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
+				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].paths[1]+4);
+			} else if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].paths[2] <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(384*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
 				Mouse.clicked = false;
-				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].path3+8);
-			}else if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].path4 <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(440*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
+				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].paths[2]+8);
+			}else if(Mouse.clicked&&Main.player[0].towers[Main.player[0].selectedtower].paths[3] <= 4&&Mouse.moveOver(Mouse.mx, Mouse.my, Math.round(440*Render.xScale), Math.round(284*Render.yScale), Math.round(56*Render.xScale), Math.round(100*Render.yScale))) {
 				Mouse.clicked = false;
-				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].path4+12);
+				Main.player[0].towers[Main.player[0].selectedtower].upgrades(Main.player[0].towers[Main.player[0].selectedtower].paths[3]+12);
 			}
 		}
 	}

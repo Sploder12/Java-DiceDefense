@@ -30,7 +30,7 @@ public class Render extends Canvas implements Runnable{
 	public static byte fpslimit = 47, wantedfps = 45;
 	public volatile static String state = "Menu";
 	public static int[] fpsgraph = new int[30];
-	public static final String Version = "V0.0.1";
+	public static final String Version = "V0.0.30";
 	public static int mapselect = 0;
 	public static WaveManager waving;
 	

@@ -24,13 +24,13 @@ public class startmenu {
 				Render.g.fillRect(Math.round(((50*dif)+50)*Render.xScale),Math.round(100*Render.yScale),Math.round(25*Render.xScale),Math.round(25*Render.yScale));
 			}
 		}
-		Render.g.drawRect(Math.round(150*Render.xScale), Math.round(390*Render.yScale), Math.round(200*Render.xScale), Math.round(40*Render.yScale));
+		Render.g.drawRect(Math.round(150*Render.xScale), Math.round(390*Render.yScale), Math.round(200*Render.xScale), Math.round(30*Render.yScale));
 		Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 2.5F)); 
 		Render.g.setFont(Render.newFont);
-		Render.g.drawString("Start", Math.round(210*Render.xScale), Math.round(420*Render.yScale));
+		Render.g.drawString("Start", Math.round(210*Render.xScale), Math.round(415*Render.yScale));
 		Render.newFont = Render.currentFont.deriveFont(Render.xScale*(Render.currentFont.getSize() * 1.5F)); 
 		Render.g.setFont(Render.newFont);
-		Render.g.drawRect(Math.round(450*Render.xScale), Math.round(390*Render.yScale), Math.round(40*Render.xScale), Math.round(40*Render.yScale));
+		Render.g.drawRect(Math.round(450*Render.xScale), Math.round(390*Render.yScale), Math.round(40*Render.xScale), Math.round(30*Render.yScale));
 		Render.g.drawString("Back", Math.round(450*Render.xScale), Math.round(415*Render.yScale));
 		
 		

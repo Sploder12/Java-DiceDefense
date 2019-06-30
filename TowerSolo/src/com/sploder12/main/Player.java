@@ -23,6 +23,7 @@ public class Player{
 	public Unit getselectunit() {
 		return selectedunit;
 	}
+	
 	public long getcash() {
 		return cash;
 	}
@@ -40,7 +41,7 @@ public class Player{
 	
 	public void placeUnit(){
 		if(placing && totaltowers < 100 && Mouse.mx < 384*Render.xScale && Mouse.my < 384*Render.yScale){
-			if(cash >= selectedunit.getTowerCost() && Mouse.clicked && (Main.file_mappath[(int) Math.floor(Mouse.my/32)][(int) Math.floor(Mouse.mx/32)]== Paths.Null)){
+			if(cash >= selectedunit.getTowerCost() && Mouse.clicked && (Main.file_mappath[(int) Math.floor(Mouse.my/(16*Render.yScale))][(int) Math.floor(Mouse.mx/(16*Render.xScale))]== Paths.Null)){
 				cash -= selectedunit.getTowerCost();
 				placing = false;
 				towers[totaltowers] = new Units(Math.round((Mouse.mx-35)/Render.xScale),Math.round((Mouse.my-35)/Render.yScale),selectedunit);
